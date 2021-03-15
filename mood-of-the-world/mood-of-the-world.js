@@ -326,11 +326,22 @@ xAxisG.select('.domain').remove();
 //////////// SOUND /////////////////
 ////////////////////////////////////
 
+// Hate = hate.mp3 //
 const playerHate = new Tone.Player("../sound/hate.mp3").toMaster();
-// playerHate.autostart = true;
 playerHate.loop = true;
+
+// Hate = Brown noise //
+// const noise = new Tone.Noise("brown").start();
+// noise.stop();
+// noise.volume.value = -20;
+// const playerHate = new Tone.AutoFilter({
+// 	// frequency: "4n",
+// 	// baseFrequency: 200,
+// 	// octaves: 8
+// }).connect(Tone.Master);
+// noise.connect(playerHate);
+
 const playerLove = new Tone.Player("../sound/love.mp3").toMaster();
-// playerLove.autostart = true;
 playerLove.loop = true;
 const playerNewHate = new Tone.Player("../sound/newHate.mp3").toMaster();
 const playerNewLove = new Tone.Player("../sound/newLove.mp3").toMaster();
@@ -380,15 +391,17 @@ const StartBtn = d3.select(".wrapper").append("div")
 function soundStart(hate, love) {
     var ratio = hate+love;
     ratio = ratio.toFixed(0);
-    var ratioHate = (hate / ratio) *5;
+    var ratioHate = (hate / ratio) *20 - 5;
     ratioHate = ratioHate.toFixed(1);
     var valueHate = 1 - (hate / 100);
     valueHate = valueHate.toFixed(1);
-    var ratioLove = (love / ratio) *5;
+    var ratioLove = (love / ratio) *20 - 5;
     ratioLove = ratioLove.toFixed(1);
 
     playerHate.playbackRate = valueHate;
     playerHate.volume.rampTo(ratioHate, 1);
+    // noise.start();
+
     playerLove.volume.rampTo(ratioLove, 1);
     Tone.Transport.bpm.rampTo(ratio, 1);
     playerHate.start();
@@ -400,12 +413,15 @@ function soundStart(hate, love) {
 function soundUpdate(hate, love) {
     var ratio = hate+love;
     ratio = ratio.toFixed(0);
-    var ratioHate = (hate / ratio) *5;
+    var ratioHate = (hate / ratio) *20 - 5;
     ratioHate = ratioHate.toFixed(1);
     var valueHate = 1 - (hate / 100);
     valueHate = valueHate.toFixed(1);
-    var ratioLove = (love / ratio) *5;
+    var ratioLove = (love / ratio) *20 - 5;
     ratioLove = ratioLove.toFixed(1);
+
+    // noise.playbackRate = valueHate;
+    // playerHate.playbackRate = valueHate;
 
     playerHate.playbackRate = valueHate;
     playerLove.playbackRate = 1;
