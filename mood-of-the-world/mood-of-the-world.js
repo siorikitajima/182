@@ -144,7 +144,7 @@ lovePool.append("path")
       .attr("stroke", "rgba(0,0,0,0)")
       .attr("d", lineLove);
 
-      hateBubbles();
+      hateBubbles(0);
       loveBubbles(1300);
 
 // Hate Tweet number and the counter animation
@@ -363,7 +363,7 @@ const muteIcon = d3.select(".wrapper").append("div")
 const StartBtn = d3.select(".wrapper").append("div")
     .attr("class", "openingModal")
     .style('opacity',1)
-    .html('<p>Listen to the mood of the world</p><img src="../images/mute-dark.svg">')
+    .html('<img src="../images/mute-dark.svg"><p>Listen to the mood of the world</p>')
     .on("mouseover", function(){
         StartBtn.style('opacity', 0.5);
     })
@@ -395,12 +395,6 @@ function soundStart(hate, love) {
     playerLove.start();
     
     console.log('ratioHate (Volume of Hate) = ' + ratioHate + '\nratioLove (Volume of Love) = ' + ratioLove + '\nvalueHate (Playback Rate of Hate) = ' + valueHate + '\nratio (BPM for the whole) = ' + ratio );
-    // ratioLove = ratioLove.toFixed(1);
-    // ratio = ratio.toFixed(0);
-    // Tone.Transport.bpm.value = ratio;
-    // Tone.Transport.scheduleRepeat(repeatHate, ratioHate);
-    // Tone.Transport.scheduleRepeat(repeatLove, ratioLove);
-    // Tone.Transport.start();
 }
 
 function soundUpdate(hate, love) {
@@ -421,6 +415,10 @@ function soundUpdate(hate, love) {
     console.log('ratioHate (Volume of Hate) = ' + ratioHate + '\nratioLove (Volume of Love) = ' + ratioLove + '\nvalueHate (Playback Rate of Hate) = ' + valueHate + '\nratio (BPM for the whole) = ' + ratio + '\n CurrentBMP = ' + Tone.Transport.bpm.value );
 
 }
+
+////////////////////////////////////
+/////// Bubbles + New Tweets ///////
+////////////////////////////////////
 
 //// Bubble Effects ////
 function hateBubbles(dl) {
