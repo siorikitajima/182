@@ -525,7 +525,8 @@ div.crimeBox:hover::after {
 
 .tweetLabel {
   width: 100%;
-  height: 100%;
+  max-width: 1000px;
+  height: auto;
   left: 50%;
   -webkit-transform: translateX(-50%);
           transform: translateX(-50%);
