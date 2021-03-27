@@ -329,20 +329,12 @@ xAxisG.select('.domain').remove();
 // Hate = hate.mp3 //
 const playerHate = new Tone.Player("../sound/hate.mp3").toMaster();
 playerHate.loop = true;
-
-// Hate = Brown noise //
-// const noise = new Tone.Noise("brown").start();
-// noise.stop();
-// noise.volume.value = -20;
-// const playerHate = new Tone.AutoFilter({
-// 	// frequency: "4n",
-// 	// baseFrequency: 200,
-// 	// octaves: 8
-// }).connect(Tone.Master);
-// noise.connect(playerHate);
-
 const playerLove = new Tone.Player("../sound/love.mp3").toMaster();
 playerLove.loop = true;
+const playerBigHate = new Tone.Player("../sound/bigHate.mp3").toMaster();
+playerBigHate.loop = true;
+const playerBigLove = new Tone.Player("../sound/bigLove.mp3").toMaster();
+playerBigLove.loop = true;
 const playerNewHate = new Tone.Player("../sound/newHate.mp3").toMaster();
 const playerNewLove = new Tone.Player("../sound/newLove.mp3").toMaster();
 playerNewHate.loop = false;
@@ -358,6 +350,8 @@ const muteIcon = d3.select(".wrapper").append("div")
             playerLove.mute = false;
             playerNewHate.mute = false;
             playerNewLove.mute = false;
+            playerBigHate.mute = false;
+            playerBigLove.mute = false;
             muted = false;
             muteIcon.style('background', 'url(../images/mute.svg)');
         } else {
@@ -365,6 +359,8 @@ const muteIcon = d3.select(".wrapper").append("div")
             playerLove.mute = true;
             playerNewHate.mute = true;
             playerNewLove.mute = true;
+            playerBigHate.mute = true;
+            playerBigLove.mute = true;
             muted = true;
             muteIcon.style('background', 'url(../images/unmute.svg)');
         }
@@ -391,44 +387,103 @@ const StartBtn = d3.select(".wrapper").append("div")
 function soundStart(hate, love) {
     var ratio = hate+love;
     ratio = ratio.toFixed(0);
-    var ratioHate = (hate / ratio) *20 - 5;
+    var ratioHate = (hate / ratio) *15 - 5;
     ratioHate = ratioHate.toFixed(1);
     var valueHate = 1 - (hate / 100);
     valueHate = valueHate.toFixed(1);
-    var ratioLove = (love / ratio) *20 - 5;
+    var valueBigHate = hate / 100;
+    valueBigHate = valueBigHate.toFixed(1);
+    var ratioLove = (love / ratio) *15 - 5;
     ratioLove = ratioLove.toFixed(1);
+    var valueBigLove = love / 100;
+    valueBigLove = valueBigLove.toFixed(1);
 
+    if(valueBigHate > 0.5) {
+        playerBigHate.start();
+        playerBigHate.volume.rampTo(valueBigHate*2 -4, 1);
+    }
+    if(valueBigLove > 0.5) {
+        playerBigLove.start();
+        playerBigLove.volume.rampTo(2 * valueBigLove, 1);
+    }
     playerHate.playbackRate = valueHate;
     playerHate.volume.rampTo(ratioHate, 1);
-    // noise.start();
-
     playerLove.volume.rampTo(ratioLove, 1);
     Tone.Transport.bpm.rampTo(ratio, 1);
     playerHate.start();
     playerLove.start();
     
-    console.log('ratioHate (Volume of Hate) = ' + ratioHate + '\nratioLove (Volume of Love) = ' + ratioLove + '\nvalueHate (Playback Rate of Hate) = ' + valueHate + '\nratio (BPM for the whole) = ' + ratio );
+    console.log('ratioHate (Volume of Hate) = ' + ratioHate + '\nratioLove (Volume of Love) = ' + ratioLove + '\nvalueHate (Playback Rate of Hate) = ' + valueHate + '\nratio (BPM for the whole) = ' + ratio + '\nvalueBigHate (Volume of BigHate) = ' + valueBigHate + '\nvalueBigLove (Volume of BigLove) = ' + valueBigLove );
+
 }
 
 function soundUpdate(hate, love) {
     var ratio = hate+love;
     ratio = ratio.toFixed(0);
-    var ratioHate = (hate / ratio) *20 - 5;
+    var ratioHate = (hate / ratio) *15 - 5;
     ratioHate = ratioHate.toFixed(1);
     var valueHate = 1 - (hate / 100);
     valueHate = valueHate.toFixed(1);
-    var ratioLove = (love / ratio) *20 - 5;
+    var valueBigHate = hate / 100;
+    valueBigHate = valueBigHate.toFixed(1);
+    var ratioLove = (love / ratio) *15 - 5;
     ratioLove = ratioLove.toFixed(1);
+    var valueBigLove = love / 100;
+    valueBigLove = valueBigLove.toFixed(1);
 
-    // noise.playbackRate = valueHate;
-    // playerHate.playbackRate = valueHate;
+    if(valueBigHate > 0.5) {
+        if(playerBigHate.state == 'started') {
+            playerBigHate.volume.rampTo(valueBigHate*2 -4, 1);
+        } else {
+            playerBigHate.start();
+            playerBigHate.volume.rampTo(valueBigHate*2 -4, 1);
+        }
+    } else {
+        playerBigHate.fadeOut = 3000;
+        playerBigHate.stop();
+    }
+
+    if(valueBigLove > 0.5) {
+        if(playerBigLove.state == 'started') {
+            playerBigLove.volume.rampTo(2 * valueBigLove, 1);
+        } else {
+            playerBigLove.start();
+            playerBigLove.volume.rampTo(2 * valueBigLove, 1);
+        }
+    } else {
+        playerBigLove.fadeOut = 3000;
+        playerBigLove.stop();
+    }
+
+    if(valueBigHate >= 0.6) {
+        d3.selectAll(".moodWrapper")
+        .style('background','#222222')
+        .style('background-image', 'url("../images/45-degree-fabric-light.png")');
+    } else if(valueBigHate >= 0.5) {
+        d3.selectAll(".moodWrapper")
+        .style('background','#333333')
+        .style('background-image', 'url("../images/45-degree-fabric-light.png")');
+    } else if(valueBigHate >= 0.4) {
+        d3.selectAll(".moodWrapper")
+        .style('background','#524141')
+        .style('background-image', 'url("../images/45-degree-fabric-light.png")');
+    } else if(valueBigHate >= 0.3) {
+        d3.selectAll(".moodWrapper")
+        .style('background','#725151')
+        .style('background-image', 'url("../images/45-degree-fabric-light.png")');
+    } else if(valueBigHate < 0.3) {
+        d3.selectAll(".moodWrapper")
+        .style('background','#955b5b')
+        .style('background-image', 'url("../images/45-degree-fabric-light.png")');
+    }
 
     playerHate.playbackRate = valueHate;
     playerLove.playbackRate = 1;
     playerHate.volume.rampTo(ratioHate, 1);
     playerLove.volume.rampTo(ratioLove, 1);
     Tone.Transport.bpm.rampTo(ratio, 1);
-    console.log('ratioHate (Volume of Hate) = ' + ratioHate + '\nratioLove (Volume of Love) = ' + ratioLove + '\nvalueHate (Playback Rate of Hate) = ' + valueHate + '\nratio (BPM for the whole) = ' + ratio + '\n CurrentBMP = ' + Tone.Transport.bpm.value );
+
+    console.log('ratioHate (Volume of Hate) = ' + ratioHate + '\nratioLove (Volume of Love) = ' + ratioLove + '\nvalueHate (Playback Rate of Hate) = ' + valueHate + '\nratio (BPM for the whole) = ' + ratio + '\nvalueBigHate (Volume of BigHate) = ' + valueBigHate + '\nvalueBigLove (Volume of BigLove) = ' + valueBigLove );
 
 }
 

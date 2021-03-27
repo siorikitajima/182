@@ -10,6 +10,7 @@ body {
   font: 100% "Dosis", sans-serif;
   color: #ddd;
   background-color: #171717;
+  /* background-image: linear-gradient(to bottom right, #7d53de, #F18805); */
   letter-spacing: 0.1em;
 }
 
@@ -98,15 +99,16 @@ p {
   position: fixed;
   margin: 0;
   padding: 0;
-  overflow-x: hidden;
+  /* overflow-x: hidden; */
+  overflow-x: scroll;
   overflow-y: hidden;
 }
 
-@media (orientation: portrait) {
+/* @media (orientation: portrait) {
   .wrapper {
     overflow-x: scroll;
   }
-}
+} */
 
 .wrapper svg {
   position: absolute;
@@ -180,8 +182,9 @@ p {
 
 /* ====== IFNO + VIOLENCE ====== */
 .infoWrapper {
-  background: #292929;
-  background-image: url("../images/45-degree-fabric-light.png");
+  /* background: #292929; */
+  background: linear-gradient(to bottom right, rgba(159, 74, 232, 0.3), rgba(255, 98, 0, 0.5)),
+  url("../images/45-degree-fabric-light.png");
 }
 
 .line-path {
@@ -195,7 +198,7 @@ p {
 }
 
 .events {
-  mix-blend-mode: difference;
+  mix-blend-mode:multiply;
   -webkit-transition-duration: 100ms;
           transition-duration: 100ms;
 }
@@ -214,7 +217,7 @@ div.tooltipEv {
   width: calc(100% - 20px);
   min-height: 10px;
   padding: 10px;
-  background: #222;
+  background: #000;
   border-bottom: 1px rgba(221, 221, 221, 0.5) solid;
   border-top: 1px rgba(221, 221, 221, 0.5) solid;
   pointer-events: none;
@@ -225,7 +228,7 @@ div.tooltipEv {
   top: 40px;
   width: calc(100% - 40px);
   padding: 30px 20px;
-  background: #222;
+  background: #000;
   border-bottom: 1px rgba(221, 221, 221, 0.5) solid;
   border-top: 1px rgba(221, 221, 221, 0.5) solid;
   height: -webkit-fit-content;
@@ -293,9 +296,7 @@ div.tooltipEv {
   width: 60px;
   height: 60px;
   position: absolute;
-  top: 50%;
-  -webkit-transform: translateY(-50%);
-          transform: translateY(-50%);
+  top: 0;
 }
 
 @media (max-width: 800px) {
@@ -326,7 +327,7 @@ div.tooltipEv {
   width: 60px;
   height: 60px;
   position: absolute;
-  top: 0;
+  bottom: 20px;
   background-image: url(../images/close-icon.svg);
 }
 
@@ -349,17 +350,17 @@ div.tooltipEv {
   }
 }
 
-div.gunBox, div.crimeBox {
+/* div.gunBox, div.crimeBox {
   position: fixed;
-  bottom: 40px;
-  width: 100px;
-  height: 100px;
+  left: 0;
+  width: 80px;
+  height: 80px;
 }
 
 div.gunBox::after, div.crimeBox::after {
   opacity: 0;
   font-weight: bold;
-  font-size: 1.6em;
+  font-size: 1.4em;
   letter-spacing: 0;
   width: 150px;
   height: 20px;
@@ -375,19 +376,19 @@ div.gunBox:hover::after, div.crimeBox:hover::after {
 }
 
 div.gunBox {
-  right: 20px;
+  bottom: 20px;
   background-image: url(../images/gun-icon.svg);
 }
 
 div.gunBox:hover::after {
   content: "Gun Sales";
   color: #000;
-  right: 100px;
-  text-align: right;
+  left: 100px;
+  text-align: left;
 }
 
 div.crimeBox {
-  left: 20px;
+  top: 40px;
   background-image: url(../images/crime-icon.svg);
 }
 
@@ -396,12 +397,13 @@ div.crimeBox:hover::after {
   color: #bbb;
   left: 100px;
   text-align: left;
-}
+} */
 
 /* ====== MOOD OF THE WORLD ====== */
 .moodWrapper {
   background: #222;
   background-image: url("../images/45-degree-fabric-light.png");
+  transition-duration: 500ms;
 }
 
 .lovePool {

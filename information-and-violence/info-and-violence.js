@@ -6,7 +6,7 @@ var portrait = innerHeight > innerWidth ? true : false;
 //// Create SVG (infoWrapper)
 const svg = d3.selectAll(".wrapper")
     .append("svg")
-    .attr("width", portrait ? width *3 : width)
+    .attr("width", portrait ? width *4 : width*2)
     .attr("height", height)
     .attr("class", "infoWrapper");
 
@@ -19,7 +19,7 @@ const renderEv = datasetEv => {
     const xScaleEv = d3.scaleTime()
       // .domain(d3.extent(datasetEv, xValueEv))
       .domain([new Date("2016-01-07"), new Date("2020-12-31")])
-      .range(portrait? [0, innerWidth *3]:[0, innerWidth])
+      .range(portrait? [0, innerWidth *4]:[0, innerWidth*2])
       .nice();
   
     const gEv = d3.selectAll(".infoWrapper").append('g')
@@ -73,22 +73,22 @@ const renderEv = datasetEv => {
         .attr('x', de => xScaleEv(xValueEv(de)))
         .attr('y', 0)
         .attr('stroke', 'none')
-        .attr('fill', 'rgb(160, 60, 60)') // Event Color
+        .attr('fill', 'rgb(100, 40, 40)') // Event Color
         .attr('width', wValue)
         .attr('height', '0%')        
         .style('opacity', 0)        
         .on("mouseover", function(de) {	
             // d3.select(this).style("opacity", 1);
-            var currentDate = formatting(de.date);
+          var currentDate = formatting(de.date);
 
             // evMonth = de.date.getMonth() + 1;
             // evYear = de.date.getYear() - 100;
             // evDay = de.date.getDay() + 1;
-            divEv.transition()		
+          divEv.transition()		
                 .duration(200)		
-                .style("opacity", 1);		
+                .style("opacity", 0.7);		
             // divEv.html(evMonth + '/' + evDay + '/' + evYear + '<br/>' + de.name)	
-            divEv.html(currentDate + '<br/>' + de.name)	
+          divEv.html(currentDate + '<br/>' + de.name)	
                 .style("top", (d3.event.pageY - 28) + "px")
                 .style("left", 0);	
             })
@@ -109,10 +109,10 @@ const renderEv = datasetEv => {
             .duration(300)
             .ease(d3.easeSinOut)
             .attr('height', '100%') 
-            .style('opacity', 0.7)
+            .style('opacity', 0.4)
             .delay(function(de,i){return(5000 + i* 50 * Math.random())})
             .transition()
-                .style('opacity', 0.9)
+                .style('opacity', 0.8)
                 .delay(function(de,i){return(i*10)});
         
     function showViewer(de) {
@@ -129,7 +129,7 @@ const renderEv = datasetEv => {
       d3.selectAll(".viewerLeft").html(viewerLeftHtml).attr("num", de.num);
       d3.selectAll(".viewerRight").html(themedia);
         viewerEv.style("height", "auto")
-            .style("opacity", 1);
+            .style("opacity", 0.7);
             // .append(viewerHtml);
         divEv.transition()		
             .duration(500)		
@@ -138,7 +138,7 @@ const renderEv = datasetEv => {
         prevEv.on("click", prevViewer);
 
         const theID = d3.selectAll(".viewerLeft").attr("num");
-        d3.selectAll(".events").style("mix-blend-mode","difference");
+        d3.selectAll(".events").style("mix-blend-mode","soft-light");
         d3.select(".events:nth-of-type("+ (+theID+1) + ")").style("mix-blend-mode","exclusion");
     };
     function nextViewer() {
@@ -147,7 +147,8 @@ const renderEv = datasetEv => {
       console.log(nextID);
       var nextDate = formatting(datasetEv[nextID].date);
       d3.select(".events:nth-of-type("+ (+nextID+1) + ")").style("mix-blend-mode","exclusion");
-      d3.select(".events:nth-of-type("+ (+theID+1) + ")").style("mix-blend-mode","difference");
+      d3.select(".events:nth-of-type("+ (+theID+1) + ")").style("mix-blend-mode","soft-light");
+
 
       const themedia = function() {
       if(datasetEv[nextID].media == "img") {
@@ -168,7 +169,7 @@ const renderEv = datasetEv => {
       console.log(prevID);
       var nextDate = formatting(datasetEv[prevID].date);
       d3.select(".events:nth-of-type("+ (+prevID+1) + ")").style("mix-blend-mode","exclusion");
-      d3.select(".events:nth-of-type("+ (+theID+1) + ")").style("mix-blend-mode","difference");
+      d3.select(".events:nth-of-type("+ (+theID+1) + ")").style("mix-blend-mode","soft-light");
 
       const themedia = function() {
       if(datasetEv[prevID].media == "img") {
@@ -188,7 +189,7 @@ const renderEv = datasetEv => {
             .style("opacity", 0);
         d3.selectAll(".events")
             .style("opacity", 0.9)
-            .style("mix-blend-mode","difference");
+            .style("mix-blend-mode","soft-light");
     };
 };
 
@@ -201,11 +202,11 @@ const render = data => {
     const xScale = d3.scaleTime()
         // .domain(d3.extent(data, xValue))
         .domain([new Date("2016-01-07"), new Date("2020-12-31")])
-        .range(portrait? [0, innerWidth *3]:[0, innerWidth])
+        .range(portrait? [0, innerWidth *4]:[0, innerWidth*2])
         .nice();
     const yScale = d3.scaleLinear()
         .domain(d3.extent(data, yValue))
-        .range([innerHeight, 0])
+        .range([innerHeight, 100])
         .nice();
     const g = d3.selectAll(".infoWrapper").append('g')
         .attr('transform', `translate(${margin.left},${margin.top})`);
@@ -254,12 +255,12 @@ const render = data => {
         .attr('class', 'start')
         .attr("offset", "10%")
         .attr("stop-color", "#BBB") // Light
-        .attr("stop-opacity", 0.6);
+        .attr("stop-opacity", 1);
         gradient.append("stop")
         .attr('class', 'end')
         .attr("offset", "50%")
-        .attr("stop-color", "#222")
-        .attr("stop-opacity", 0);
+        .attr("stop-color", "#BBB")
+        .attr("stop-opacity", 0.8);
     const gradientTall = g.append("linearGradient")
         .attr("id", "svgGradientTall")
         .attr("x1", "0%")
@@ -268,12 +269,12 @@ const render = data => {
         .attr("y2", "100%");
         gradientTall.append("stop")
         .attr('class', 'start')
-        .attr("offset", "35%")
+        .attr("offset", "40%")
         .attr("stop-color", "#000") // Dark
         .attr("stop-opacity", 1);
         gradientTall.append("stop")
         .attr('class', 'end')
-        .attr("offset", "70%")
+        .attr("offset", "80%")
         .attr("stop-color", "#222")
         .attr("stop-opacity", 0);
     const colorScale = d3.scaleOrdinal()
@@ -321,7 +322,7 @@ var crimeBox =  d3.selectAll(".wrapper").append("div")
       .transition()
           .duration(1000)
           .delay(3000)
-          .style('opacity', 0.4);
+          .style('opacity', 1);
 
     /////// Mouse over effect ///////
     var mouseG = g.append("g")
@@ -337,12 +338,20 @@ var crimeBox =  d3.selectAll(".wrapper").append("div")
       .append("g")
       .attr("class", "mouse-per-line");
     mousePerLine.append("circle")
-      .attr("r", 5)
+      .attr("r", 20)
       .style("fill", "#ddd")
       .style("stroke", "none")
-      .style("opacity", "0");
+      .style("opacity", "0")
+            .append("image")
+        .attr("src", function(d) {
+          if ( d.key == "Gun") {
+              return "../images/gun-icon.svg";
+          }
+          else if (d.key == "Homicide") {
+              return "../images/crime-icon.svg"
+          }});
     mousePerLine.append("text")
-      .attr("transform", "translate(10,3)")
+      .attr("transform", "translate(25,3)")
       .attr("class", "textTT")
       .style("fill", "#ddd")
       .style("opacity", "0");
