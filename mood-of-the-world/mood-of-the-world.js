@@ -413,6 +413,29 @@ function soundStart(hate, love) {
     playerHate.start();
     playerLove.start();
     
+        // BG color
+        if(valueBigHate >= 0.6) {
+            d3.selectAll(".moodWrapper")
+            .style('background','#222222')
+            .style('background-image', 'url("../images/45-degree-fabric-light.png")');
+        } else if(valueBigHate >= 0.5) {
+            d3.selectAll(".moodWrapper")
+            .style('background','#333333')
+            .style('background-image', 'url("../images/45-degree-fabric-light.png")');
+        } else if(valueBigHate >= 0.4) {
+            d3.selectAll(".moodWrapper")
+            .style('background','#524141')
+            .style('background-image', 'url("../images/45-degree-fabric-light.png")');
+        } else if(valueBigHate >= 0.3) {
+            d3.selectAll(".moodWrapper")
+            .style('background','#725151')
+            .style('background-image', 'url("../images/45-degree-fabric-light.png")');
+        } else if(valueBigHate < 0.3) {
+            d3.selectAll(".moodWrapper")
+            .style('background','#955b5b')
+            .style('background-image', 'url("../images/45-degree-fabric-light.png")');
+        }
+        
     console.log('ratioHate (Volume of Hate) = ' + ratioHate + '\nratioLove (Volume of Love) = ' + ratioLove + '\nvalueHate (Playback Rate of Hate) = ' + valueHate + '\nratio (BPM for the whole) = ' + ratio + '\nvalueBigHate (Volume of BigHate) = ' + valueBigHate + '\nvalueBigLove (Volume of BigLove) = ' + valueBigLove );
 
 }
@@ -455,33 +478,34 @@ function soundUpdate(hate, love) {
         playerBigLove.stop();
     }
 
-    if(valueBigHate >= 0.6) {
-        d3.selectAll(".moodWrapper")
-        .style('background','#222222')
-        .style('background-image', 'url("../images/45-degree-fabric-light.png")');
-    } else if(valueBigHate >= 0.5) {
-        d3.selectAll(".moodWrapper")
-        .style('background','#333333')
-        .style('background-image', 'url("../images/45-degree-fabric-light.png")');
-    } else if(valueBigHate >= 0.4) {
-        d3.selectAll(".moodWrapper")
-        .style('background','#524141')
-        .style('background-image', 'url("../images/45-degree-fabric-light.png")');
-    } else if(valueBigHate >= 0.3) {
-        d3.selectAll(".moodWrapper")
-        .style('background','#725151')
-        .style('background-image', 'url("../images/45-degree-fabric-light.png")');
-    } else if(valueBigHate < 0.3) {
-        d3.selectAll(".moodWrapper")
-        .style('background','#955b5b')
-        .style('background-image', 'url("../images/45-degree-fabric-light.png")');
-    }
-
     playerHate.playbackRate = valueHate;
     playerLove.playbackRate = 1;
     playerHate.volume.rampTo(ratioHate, 1);
     playerLove.volume.rampTo(ratioLove, 1);
     Tone.Transport.bpm.rampTo(ratio, 1);
+
+        // BG color
+        if(valueBigHate >= 0.6) {
+            d3.selectAll(".moodWrapper")
+            .style('background','#222222')
+            .style('background-image', 'url("../images/45-degree-fabric-light.png")');
+        } else if(valueBigHate >= 0.5) {
+            d3.selectAll(".moodWrapper")
+            .style('background','#333333')
+            .style('background-image', 'url("../images/45-degree-fabric-light.png")');
+        } else if(valueBigHate >= 0.4) {
+            d3.selectAll(".moodWrapper")
+            .style('background','#524141')
+            .style('background-image', 'url("../images/45-degree-fabric-light.png")');
+        } else if(valueBigHate >= 0.3) {
+            d3.selectAll(".moodWrapper")
+            .style('background','#725151')
+            .style('background-image', 'url("../images/45-degree-fabric-light.png")');
+        } else if(valueBigHate < 0.3) {
+            d3.selectAll(".moodWrapper")
+            .style('background','#955b5b')
+            .style('background-image', 'url("../images/45-degree-fabric-light.png")');
+        }
 
     console.log('ratioHate (Volume of Hate) = ' + ratioHate + '\nratioLove (Volume of Love) = ' + ratioLove + '\nvalueHate (Playback Rate of Hate) = ' + valueHate + '\nratio (BPM for the whole) = ' + ratio + '\nvalueBigHate (Volume of BigHate) = ' + valueBigHate + '\nvalueBigLove (Volume of BigLove) = ' + valueBigLove );
 
