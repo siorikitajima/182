@@ -8,7 +8,7 @@ html, body {
 
 body {
   font: 100% "Dosis", sans-serif;
-  color: #ddd;
+  /* color: #ddd; */
   background-color: #171717;
   /* background-image: linear-gradient(to bottom right, #7d53de, #F18805); */
   letter-spacing: 0.1em;
@@ -50,6 +50,12 @@ p {
   -webkit-box-pack: space-evenly;
       -ms-flex-pack: space-evenly;
           justify-content: space-evenly;
+}
+
+@media (max-width: 800px) {
+  .header {
+    font-size: 1em;
+  }
 }
 
 .header .headerLeft, .header .headerRight {
@@ -130,6 +136,7 @@ p {
   height: fit-content;
   margin: 100px auto;
   text-align: center;
+  color: #ddd;
 }
 
 .topMenu h1 {
@@ -171,20 +178,30 @@ p {
 }
 
 /* ====== Global Chart elements ====== */
-.x.axis line {
+
+.x.axis line, .y.axis line, .x.axis path, .y.axis path {
   display: none;
 }
 
-.x.axis text {
-  color: #ddd !important;
+.x.axis text, .y.axis text {
+  /* color: #ddd; */
   font-size: 1.2em;
+  mix-blend-mode: normal;
 }
+
+.y.axis text {
+  font-weight: bold;
+}
+/* .x.axis, .y.axis {
+  z-index: 8000 !important;
+} */
 
 /* ====== IFNO + VIOLENCE ====== */
 .infoWrapper {
   /* background: #292929; */
   background: linear-gradient(to bottom right, rgba(159, 74, 232, 0.3), rgba(255, 98, 0, 0.5)),
   url("../images/45-degree-fabric-light.png");
+  color: #ddd;
 }
 
 .line-path {
@@ -198,17 +215,30 @@ p {
 }
 
 .events {
-  mix-blend-mode:multiply;
+  /* mix-blend-mode:soft-light; */
   -webkit-transition-duration: 100ms;
           transition-duration: 100ms;
 }
 
-.events:hover {
-  mix-blend-mode: exclusion;
-}
+/* .events:hover {
+  mix-blend-mode: color-dodge;
+  opacity: 1;
+} */
 
 .mouse-line, .mouse-line circle, .mouse-per-line, .mouse-per-line circle {
   pointer-events: none;
+}
+
+.mouse-per-line circle {
+  position: relative;
+}
+
+.mouse-circle-img {
+  z-index: 9999 !important;
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform: translate(-20px, -20px);
 }
 
 div.tooltipEv {
@@ -217,10 +247,11 @@ div.tooltipEv {
   width: calc(100% - 20px);
   min-height: 10px;
   padding: 10px;
-  background: #000;
+  background: rgba(0, 0, 0, 0.7);
   border-bottom: 1px rgba(221, 221, 221, 0.5) solid;
   border-top: 1px rgba(221, 221, 221, 0.5) solid;
   pointer-events: none;
+  color: #ddd;
 }
 
 .viewerEv {
@@ -228,7 +259,7 @@ div.tooltipEv {
   top: 40px;
   width: calc(100% - 40px);
   padding: 30px 20px;
-  background: #000;
+  background: rgba(0, 0, 0, 0.7);
   border-bottom: 1px rgba(221, 221, 221, 0.5) solid;
   border-top: 1px rgba(221, 221, 221, 0.5) solid;
   height: -webkit-fit-content;
@@ -242,6 +273,8 @@ div.tooltipEv {
           justify-content: center;
   -webkit-column-gap: 20px;
           column-gap: 20px;
+  pointer-events:none;
+  color: #ddd;
 }
 
 @media (max-width: 800px) {
@@ -297,6 +330,7 @@ div.tooltipEv {
   height: 60px;
   position: absolute;
   top: 0;
+  cursor: pointer;
 }
 
 @media (max-width: 800px) {
@@ -329,6 +363,7 @@ div.tooltipEv {
   position: absolute;
   bottom: 20px;
   background-image: url(../images/close-icon.svg);
+  cursor: pointer;
 }
 
 @media (max-width: 800px) {
@@ -399,9 +434,14 @@ div.crimeBox:hover::after {
   text-align: left;
 } */
 
+/* =============================== */
+/* =============================== */
 /* ====== MOOD OF THE WORLD ====== */
+/* =============================== */
+/* =============================== */
+
 .moodWrapper {
-  background: #222;
+  background: rgb(62, 62, 62);
   background-image: url("../images/45-degree-fabric-light.png");
   transition-duration: 500ms;
 }
@@ -421,20 +461,27 @@ div.crimeBox:hover::after {
   left: 50%;
   -webkit-transform: translateX(-50%);
           transform: translateX(-50%);
-  width: 200px;
+  width: fit-content;
   height: -webkit-fit-content;
   height: -moz-fit-content;
   height: fit-content;
   text-align: center;
-  cursor: pointer;
 }
 
-.hateText h2, .hateText h3, .hateTextAfter h2, .hateTextAfter h3, .loveText h2, .loveText h3, .loveTextAfter h2, .loveTextAfter h3 {
+/* .hateText h2, .hateText h3, .hateTextAfter h2, .hateTextAfter h3, .loveText h2, .loveText h3, .loveTextAfter h2, .loveTextAfter h3 {
   display: block;
   color: #ddd;
   font-weight: normal;
   margin: 0;
-}
+} */
+
+.loveText, .loveTextAfter {
+  color: #400000;
+} 
+
+.hateText, .hateTextAfter {
+  color: #999999;
+} 
 
 .hateText h2, .hateTextAfter h2, .loveText h2, .loveTextAfter h2 {
   font-size: 6em;
@@ -444,24 +491,47 @@ div.crimeBox:hover::after {
   font-size: 1em;
 }
 
+.hateText, .loveText {
+  font-size: 5em;
+  letter-spacing: 0.1em;
+}
+
 .hateText {
   top: 60px;
-  font-size: 6em;
 }
 
 .hateTextAfter {
-  top: 180px;
+  top: 165px;
   font-size: 1em;
+  padding-left: 38px;
 }
 
 .loveText {
   bottom: 80px;
-  font-size: 6em;
 }
 
 .loveTextAfter {
   bottom: 60px;
   font-size: 1em;
+  padding-left: 38px;
+}
+
+.hateTextAfter::before, .loveTextAfter::before {
+  content: "";
+  height: 28px;
+  width: 28px;
+  position: absolute;
+  display: inline-block;
+  top: -2px;
+  left: 0;
+}
+
+.hateTextAfter::before {
+  background-image: url('../images/hate-icon.svg');
+}
+
+.loveTextAfter::before {
+  background-image: url('../images/love-icon.svg');
 }
 
 .timeHandle {
@@ -489,6 +559,7 @@ div.crimeBox:hover::after {
 
 .tweetWrap {
   width: 400px;
+  max-width: 70%;
   height: auto;
   position: fixed;
   left: 50%;
@@ -496,6 +567,14 @@ div.crimeBox:hover::after {
           transform: translate(-50%, -50%);
   color: #ddd;
   text-align: center;
+}
+
+.newTweetBG {
+  width: 100vw;
+  height: 100vh;
+  top: 0;
+  left: 0;
+  background: lightblue;
 }
 
 .tweetWrap h3 {
@@ -543,11 +622,31 @@ div.crimeBox:hover::after {
   height: auto;
 }
 
+@media (max-width: 800px) {
+  .hateText, .loveText {
+    font-size: 4em;
+  }
+
+  .hateTextAfter {
+    top: 140px;
+  }
+
+  .tweetWrap h3 {
+    font-size: 1em;
+    line-height: 1.2em;
+  }
+}
+
 div.openingModal {
   width: 160px;
   height: 100px;
   border-radius: 50%;
   padding: 50px 20px;
+  /* width: 100vw;
+  height: 20vh;
+  padding: 40vh 0;
+  top: 0;
+  left: 0; */
   text-align: center;
   background: rgba(222, 222, 222, 0.6);
   color: #222;
@@ -565,8 +664,13 @@ div.openingModal {
   /* background: #222; */
   position: fixed;
   top: 60px;
-  left: 20px;
+  right: 20px;
   z-index: 8000;
+  opacity: 0.5;
+}
+.sound-icon:hover {
+  opacity: 0.8;
+  transition-duration: 300ms;
 }
 
 div.openingModal img {

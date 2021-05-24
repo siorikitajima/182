@@ -3,25 +3,25 @@ const innerWidth = width;
 const innerHeight = height - margin.top - margin.bottom;
 var portrait = innerHeight > innerWidth ? true : false;
 
-//// Create SVG (infoWrapper)
 const svg = d3.selectAll(".wrapper")
     .append("svg")
     .attr("width", portrait ? width *4 : width*2)
     .attr("height", height)
     .attr("class", "infoWrapper");
 
-//////// Events /////////
+////////////////////////////////////
+////////////// Events //////////////
+////////////////////////////////////
 const renderEv = datasetEv => {
-  const eventLength = datasetEv.length;
-    const xValueEv = de => de.date;
-    var formatting = d3.timeFormat("%B %d %Y");
-    // Axis
+const eventLength = datasetEv.length;
+const xValueEv = de => de.date;
+var formatting = d3.timeFormat("%B %d %Y");
+  
+  // Axis
     const xScaleEv = d3.scaleTime()
       // .domain(d3.extent(datasetEv, xValueEv))
-      .domain([new Date("2016-01-07"), new Date("2020-12-31")])
-      .range(portrait? [0, innerWidth *4]:[0, innerWidth*2])
-      .nice();
-  
+      .domain([new Date("2016-01-07"), new Date("2021-01-31")])
+      .range(portrait? [0, innerWidth *4]:[0, innerWidth*2]);
     const gEv = d3.selectAll(".infoWrapper").append('g')
       .attr('transform', `translate(${margin.left},${margin.top})`);
     //// X axis for Events preserved for testing ///
@@ -33,7 +33,9 @@ const renderEv = datasetEv => {
     //   .attr('transform', `translate(0,${innerHeight})`);
     // xAxisGEv.select('.domain').remove();
     
-    // Define the div for the tooltip
+    ////////////////////////////////////
+    /////////// Event Tooltip //////////
+    ////////////////////////////////////
     var viewerEv = d3.select("body").append("div")
     .attr("class", "viewerEv")
     .style("height", 0)
@@ -59,11 +61,12 @@ const renderEv = datasetEv => {
         .attr("class", "closeEv")
         .on("click", closeViewer);
 
-    // Draw Events  
-        const daysize = innerWidth / 1826; // devided by total days from 1/1/2016 - 12/31/2020
-        console.log(daysize);
+    ////////////////////////////////////
+    /////////// Draw Events /////////////
+    //////////////////////////////////// 
+        const thechartWidth = portrait? innerWidth *4:innerWidth*2;
+        const daysize = thechartWidth / 1840; // total days from 1/1/2016 - 1/20/2021
         const wValue = de => de.duration < 5 ? 5 + 'px' : de.duration * daysize + 'px';
-        var evMonth, evYear, evDay;
         gEv.append("g")
         .selectAll("rect")
         .data(datasetEv)
@@ -73,21 +76,31 @@ const renderEv = datasetEv => {
         .attr('x', de => xScaleEv(xValueEv(de)))
         .attr('y', 0)
         .attr('stroke', 'none')
-        .attr('fill', 'rgb(100, 40, 40)') // Event Color
+        .attr('fill', 'rgb(160, 40, 40)') // Event Color
         .attr('width', wValue)
-        .attr('height', '0%')        
-        .style('opacity', 0)        
-        .on("mouseover", function(de) {	
-            // d3.select(this).style("opacity", 1);
-          var currentDate = formatting(de.date);
+        .attr('height', '0%')
+        .style("mix-blend-mode","soft-light")     
+        .style('opacity', 0)
+        .transition()
+            .duration(300)
+            .ease(d3.easeSinOut)
+            .attr('height', '100%') 
+            .style('opacity', 0.5)
+            .delay(function(de,i){return(3000 + i* 50 * Math.random())})
+            .transition()
+                .style('opacity', 0.8)
+                .delay(function(de,i){return(i*10)});
 
-            // evMonth = de.date.getMonth() + 1;
-            // evYear = de.date.getYear() - 100;
-            // evDay = de.date.getDay() + 1;
+        var events = d3.selectAll(".events");
+        eventHoverEffect();
+        
+        function eventHoverEffect() {
+          events.on("mouseover", function(de) {
+          d3.select(this).style("mix-blend-mode","color-dodge").style('opacity',1);
+          var currentDate = formatting(de.date);
           divEv.transition()		
                 .duration(200)		
-                .style("opacity", 0.7);		
-            // divEv.html(evMonth + '/' + evDay + '/' + evYear + '<br/>' + de.name)	
+                .style("opacity", 1);		
           divEv.html(currentDate + '<br/>' + de.name)	
                 .style("top", (d3.event.pageY - 28) + "px")
                 .style("left", 0);	
@@ -96,120 +109,140 @@ const renderEv = datasetEv => {
             divEv.style("top", (d3.event.pageY - 28) + "px");	
         })			
         .on("mouseout", function(de) {
-            // d3.select(this).style("opacity", 0.8);		
+          d3.select(this).style("mix-blend-mode","soft-light").style('opacity',0.8);
             divEv.transition()		
                 .duration(500)		
                 .style("opacity", 0);	
         })
         .on("click", function(de){
-            d3.select(this).style("opacity", 1);
+            d3.select(this).style("mix-blend-mode","color-dodge").style('opacity',1);
             showViewer(de);
-        })
-        .transition()
-            .duration(300)
-            .ease(d3.easeSinOut)
-            .attr('height', '100%') 
-            .style('opacity', 0.4)
-            .delay(function(de,i){return(5000 + i* 50 * Math.random())})
-            .transition()
-                .style('opacity', 0.8)
-                .delay(function(de,i){return(i*10)});
-        
+          });
+      };
+  
+  ////////////////////////////////////
+  /////////// Event Viewer /////////////
+  ////////////////////////////////////
     function showViewer(de) {
       var currentDate = formatting(de.date);
-      const themedia = function() {
-        if(de.media == "img") {
-          const theurl = de.mediaurl;
-          return ("<img src='../images/events/"+ theurl + "'/>")
-        } else {
-          return ("<img src='../images/image-placeholder.jpg'/>")
-        }
-      }
+      setTimeout(function(){
+        d3.select(".events:nth-of-type("+ (+de.num+1) + ")").style("mix-blend-mode","color-dodge").style('opacity', 1);
+      }, 100);
+      console.log(de.num);
       const viewerLeftHtml = "<p>" + currentDate + '<br/><b>' + de.name + '</b></p>' + "<p>" + de.note + "</p>";
       d3.selectAll(".viewerLeft").html(viewerLeftHtml).attr("num", de.num);
-      d3.selectAll(".viewerRight").html(themedia);
+      d3.selectAll(".viewerRight").html(themedia(de));
         viewerEv.style("height", "auto")
-            .style("opacity", 0.7);
-            // .append(viewerHtml);
+            .style("opacity", 1)
+            .style("pointer-events", "unset");
         divEv.transition()		
             .duration(500)		
             .style("opacity", 0);
+        
         nextEv.on("click", nextViewer);
         prevEv.on("click", prevViewer);
-
-        const theID = d3.selectAll(".viewerLeft").attr("num");
-        d3.selectAll(".events").style("mix-blend-mode","soft-light");
-        d3.select(".events:nth-of-type("+ (+theID+1) + ")").style("mix-blend-mode","exclusion");
     };
+
     function nextViewer() {
       const theID = d3.selectAll(".viewerLeft").attr("num");
-      const nextID = +theID < datasetEv.length-1 ? +theID +1 : 0;
+      const nextID = +theID < eventLength-1 ? +theID +1 : 0;
       console.log(nextID);
       var nextDate = formatting(datasetEv[nextID].date);
-      d3.select(".events:nth-of-type("+ (+nextID+1) + ")").style("mix-blend-mode","exclusion");
-      d3.select(".events:nth-of-type("+ (+theID+1) + ")").style("mix-blend-mode","soft-light");
-
-
-      const themedia = function() {
-      if(datasetEv[nextID].media == "img") {
-          const theurl = datasetEv[nextID].mediaurl;
-          return ("<img src='../images/events/"+ theurl + "'/>")
-        } else {
-          return ("<img src='../images/image-placeholder.jpg'/>")
-        }
-      }
+      d3.selectAll(".events").style("mix-blend-mode","soft-light").style('opacity', 0.8);
+      d3.select(".events:nth-of-type("+ (+nextID+1) + ")").style("mix-blend-mode","color-dodge").style('opacity', 1);
       const viewerLeftHtml = "<p>" + nextDate + '<br/><b>' + datasetEv[nextID].name + '</b></p>' + "<p>" + datasetEv[nextID].note + "</p>";
       d3.selectAll(".viewerLeft").html(viewerLeftHtml);
-      d3.selectAll(".viewerRight").html(themedia);  
+      d3.selectAll(".viewerRight").html(themedia(datasetEv[nextID]));  
       d3.selectAll(".viewerLeft").attr("num", datasetEv[nextID].num);
+      const thisEv = d3.select(".events:nth-of-type("+ (+nextID+1) + ")").node();
+      const spaces = thisEv.getBoundingClientRect();
+      if(spaces.x + spaces.width > innerWidth || spaces.x < 0) {
+        thisEv.scrollIntoView();
+      }
     };
+
     function prevViewer() {
       const theID = d3.selectAll(".viewerLeft").attr("num");
-      const prevID = +theID > 0 ? +theID -1 : datasetEv.length-1;
+      const prevID = +theID > 0 ? +theID -1 : eventLength-1;
       console.log(prevID);
       var nextDate = formatting(datasetEv[prevID].date);
-      d3.select(".events:nth-of-type("+ (+prevID+1) + ")").style("mix-blend-mode","exclusion");
-      d3.select(".events:nth-of-type("+ (+theID+1) + ")").style("mix-blend-mode","soft-light");
 
-      const themedia = function() {
-      if(datasetEv[prevID].media == "img") {
-          const theurl = datasetEv[prevID].mediaurl;
-          return ("<img src='../images/events/"+ theurl + "'/>")
-        } else {
-          return ("<img src='../images/image-placeholder.jpg'/>")
-        }
-      }
+      d3.selectAll(".events").style("mix-blend-mode","soft-light").style('opacity', 0.8);
+      d3.select(".events:nth-of-type("+ (+prevID+1) + ")").style("mix-blend-mode","color-dodge").style('opacity', 1);
+
       const viewerLeftHtml = "<p>" + nextDate + '<br/><b>' + datasetEv[prevID].name + '</b></p>' + "<p>" + datasetEv[prevID].note + "</p>";
       d3.selectAll(".viewerLeft").html(viewerLeftHtml);
-      d3.selectAll(".viewerRight").html(themedia);  
+      d3.selectAll(".viewerRight").html(themedia(datasetEv[prevID]));  
       d3.selectAll(".viewerLeft").attr("num", datasetEv[prevID].num);
+
+      const thisEv = d3.select(".events:nth-of-type("+ (+prevID+1) + ")").node();
+      const spaces = thisEv.getBoundingClientRect();
+      if(spaces.x > innerWidth || spaces.x < 0) {
+        thisEv.scrollIntoView();
+      }
     };    
+
     function closeViewer() {
         viewerEv.style("height", 0)
-            .style("opacity", 0);
+            .style("opacity", 0)
+            .style("pointer-events", "none");
         d3.selectAll(".events")
-            .style("opacity", 0.9)
+            .style("opacity", 0.8)
             .style("mix-blend-mode","soft-light");
+        eventHoverEffect();
     };
+
+    function themedia(de) {
+      if(de.media == "img") {
+        const theurl = de.mediaurl;
+        return ("<img src='../images/events/"+ theurl + "'/>")
+      } else if(de.media == "shooting") {
+        return ("<img src='../images/events/shooting.jpg'/>")
+      } else if(de.media == "police") {
+        return ("<img src='../images/events/police.jpg'/>")
+      } else if(de.media == "gun-control") {
+        return ("<img src='../images/events/gun-control.jpg'/>")
+      } else if(de.media == "incident") {
+        return ("<img src='../images/events/incident.jpg'/>")
+      } else if(de.media == "covid") {
+        return ("<img src='../images/events/covid.jpg'/>")
+      } else if(de.media == "fire") {
+        return ("<img src='../images/events/fire.jpg'/>")
+      } else if(de.media == "politic") {
+        return ("<img src='../images/events/politics.jpg'/>")
+      } else if(de.media == "stats") {
+        return ("<img src='../images/events/stats.jpg'/>")
+      } else if(de.media == "video") {
+        const theurl = de.mediaurl;
+        return ('<iframe width="300" height="300" src="' + theurl + '"  frameborder="0" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>')
+
+      } else {
+        return ("<img src='../images/image-placeholder.jpg'/>")
+      }}
 };
 
-/////// Violence line charts ///////
-const render = data => {
+////////////////////////////////////
+///////  Violence line charts  /////
+////////////////////////////////////
+    const render = data => {
     const xValue = d => d.timestamp;
     const yValue = d => d.people;
     const colorValue = d => d.category;
-    // Axis
+
+    ////////////////////////////////////
+    /////////// AXIS Ticks /////////////
+    ////////////////////////////////////
+
     const xScale = d3.scaleTime()
-        // .domain(d3.extent(data, xValue))
-        .domain([new Date("2016-01-07"), new Date("2020-12-31")])
-        .range(portrait? [0, innerWidth *4]:[0, innerWidth*2])
-        .nice();
+        .domain([new Date("2016-01-07"), new Date("2021-01-31")])
+        .range(portrait? [0, innerWidth *4]:[0, innerWidth*2]);
     const yScale = d3.scaleLinear()
         .domain(d3.extent(data, yValue))
         .range([innerHeight, 100])
         .nice();
     const g = d3.selectAll(".infoWrapper").append('g')
         .attr('transform', `translate(${margin.left},${margin.top})`);
+
     const xAxis = d3.axisBottom(xScale)
         .tickSize(-innerHeight)
         .tickPadding(15);  
@@ -218,7 +251,22 @@ const render = data => {
         .attr('transform', `translate(0,${innerHeight})`);
     xAxisG.select('.domain').remove();
 
-    // Draw Lines and Area paths
+    const yAxis = d3.axisLeft(yScale).tickFormat(d3.format('.2s'));
+    const yAxisG = g.append('g').call(yAxis)
+    .attr("class", "y axis info")
+    .attr('transform', `translate(20, 0)`)
+    .selectAll('text')
+        .style('text-anchor', 'start');
+    yAxisG.attr('opacity', 0)
+        .transition()
+            .delay(1000)
+            .duration(500)
+            .style('opacity',1);
+    yAxisG.select('.domain').remove();
+
+    ////////////////////////////////////
+    //////  Lines and Area paths  //////
+    ////////////////////////////////////
     const lineGenerator = d3.line()
         .x(d => xScale(xValue(d)))
         .y(d => yScale(yValue(d)))
@@ -280,6 +328,12 @@ const render = data => {
     const colorScale = d3.scaleOrdinal()
         .range(['url(#svgGradientTall)', 'url(#svgGradient)', 'url(#svgGradient)']);
         colorScale.domain(nested.map(d => d.key));
+    var iconColor = d3.scaleOrdinal()
+        .domain(nested.map(d => d.key))
+        .range(["#222222", "#dddddd"]);
+    var iconImg = d3.scaleOrdinal()
+        .domain(nested.map(d => d.key))
+        .range(["../images/homicide-icon.svg", "../images/gun-icon.svg"]);
 
     // Line Paths
     g.selectAll('.line-path').data(nested)
@@ -305,26 +359,11 @@ const render = data => {
           .attr('d', d => areaGenerator(d.values))
           .duration(1500)
           .delay(function(de,i){return(200+ i*2000)})
-          .ease(d3.easeSinOut)
-        ;
+          .ease(d3.easeSinOut);
 
-    // Opening Legends
-var gunBox = d3.selectAll(".wrapper").append("div")
-    .attr('class', 'gunBox')
-    .style('opacity', 0)
-    .transition()
-        .duration(1000)
-        .delay(1000)
-        .style('opacity', 1);
-var crimeBox =  d3.selectAll(".wrapper").append("div")
-      .attr('class', 'crimeBox')
-      .style('opacity', 0)
-      .transition()
-          .duration(1000)
-          .delay(3000)
-          .style('opacity', 1);
-
-    /////// Mouse over effect ///////
+    ////////////////////////////////////
+    //////////  Chart Tooltip  /////////
+    ////////////////////////////////////
     var mouseG = g.append("g")
       .attr("class", "mouse-over-effects");
     mouseG.append("path")
@@ -332,24 +371,21 @@ var crimeBox =  d3.selectAll(".wrapper").append("div")
       .style("stroke", "#ddd")
       .style("opacity", "0");
     var lines = document.getElementsByClassName('line-path');
-    var mousePerLine = mouseG.selectAll('.mouse-per-line')
+    var mousePerLine = mouseG.selectAll('.mouse-per-line')    
       .data(nested)
       .enter()
       .append("g")
       .attr("class", "mouse-per-line");
     mousePerLine.append("circle")
       .attr("r", 20)
-      .style("fill", "#ddd")
-      .style("stroke", "none")
-      .style("opacity", "0")
-            .append("image")
-        .attr("src", function(d) {
-          if ( d.key == "Gun") {
-              return "../images/gun-icon.svg";
-          }
-          else if (d.key == "Homicide") {
-              return "../images/crime-icon.svg"
-          }});
+      .style("fill", d => iconColor(d.key))
+      .style("stroke", "#ddd")
+      .style("opacity", "0");
+    mousePerLine.append("image")
+      .attr("class", "mouse-circle-img")
+      .attr("width", 40).attr("height", 40)
+      .attr("xlink:href", d => iconImg(d.key))
+      .style("opacity", "0");
     mousePerLine.append("text")
       .attr("transform", "translate(25,3)")
       .attr("class", "textTT")
@@ -363,14 +399,18 @@ var crimeBox =  d3.selectAll(".wrapper").append("div")
           .style("opacity", "0");
         d3.selectAll(".mouse-per-line text")
           .style("opacity", "0");
+        d3.selectAll(".mouse-circle-img")
+          .style("opacity", "0");
       };
     function showTooltips() {
         d3.select(".mouse-line")
-        .style("opacity", "1");
+          .style("opacity", "1");
         d3.selectAll(".mouse-per-line circle")
-            .style("opacity", "1");
+          .style("opacity", "1");
         d3.selectAll(".mouse-per-line text")
-            .style("opacity", "1");
+          .style("opacity", "1");
+        d3.selectAll(".mouse-circle-img")
+          .style("opacity", "1");
       }
     function updateTooltips() {
         var mouse = d3.mouse(this);
@@ -399,15 +439,24 @@ var crimeBox =  d3.selectAll(".wrapper").append("div")
               else break; //position found
               }
             d3.select(this).select('text')
-              .text(yScale.invert(pos.y).toFixed(0))
+              .text(d.key + " :: " + yScale.invert(pos.y).toFixed(0))
               .attr("font-size", "14px");
             return "translate(" + mouse[0] + "," + pos.y +")";
           });
+
+          var mouseX = mouse[0];
+          var enoughXspace = innerWidth - mouseX;
+          if (enoughXspace < 190) {
+          d3.selectAll('.textTT').attr("transform", "translate(-165,3)");
+          } else {
+          d3.selectAll('.textTT').attr("transform", "translate(25,3)");
+          }
       }
 };
 
-//////// Rendering with Data /////////
-
+////////////////////////////////////
+//////  Rendering with Data  ///////
+////////////////////////////////////
 d3.csv('../csv/events-all.csv')
 .then(datasetEv => {
   datasetEv.forEach(de => {
@@ -430,18 +479,5 @@ d3.csv('../csv/information-violence.csv')
   });
   render(dataset);
 });
-
-
-// d3.transition()
-//     .delay(5000)
-//     .duration(7500)
-//     .tween("scroll", scrollTween(document.body.getBoundingClientRect().width - window.innerWidth *2));
-
-// function scrollTween(offset) {
-//   return function() {
-//     var i = d3.interpolateNumber(window.pageXOffset || d3.svg.scrollLeft, offset);
-//     return function(t) { scrollTo(0, i(t)); };
-//   };
-// }
 
 
