@@ -5,11 +5,15 @@ var portrait = innerHeight > innerWidth ? true : false;
 var hateNewShowing = false;
 var loveNewShowing = false;
 var muted = false;
-// var mongoSummary = "https://api182.patternbased.com/api/summary";
-var mongoSummary = "https://api182.patternbased.com/api/summary";
-// var mongoSummary = "../csv/totalMood.json";
 var hateColor = 'rgb(0)';
 var loveColor = 'rgb(220, 100, 100)';
+
+// var mongoSummary = "../csv/totalMood.json";
+// var loveApi = "../csv/loveApi.json";
+// var hateApi = "../csv/hateApi.json";
+var mongoSummary = "https://api182.patternbased.com/api/summary";
+var loveApi = "https://api182.patternbased.com/api/love";
+var hateApi = "https://api182.patternbased.com/api/hate";
 
 const svg = d3.selectAll(".wrapper").append("svg").attr("width", width).attr("height", height).attr("class", "moodWrapper");
 
@@ -435,7 +439,7 @@ const muteIcon = d3.select(".wrapper").append("div")
 const StartBtn = d3.select(".wrapper").append("div")
     .attr("class", "openingModal")
     .style('opacity',1)
-    .html('<img src="../images/mute-dark.svg"><p>Listen to the mood of the world</p>')
+    .html('<img src="../images/mute-dark.svg"><p>START</p>')
     .on("mouseover", function() {
         StartBtn.style('opacity', 0.5);
     })
@@ -609,11 +613,6 @@ for(var i=1;i<10;i++){
 }
 
 //// New Tweets ////
-
-// var loveApi = "https://api182.patternbased.com/api/love";
-// var hateApi = "https://api182.patternbased.com/api/hate";
-var loveApi = "https://api182.patternbased.com/api/love";
-var hateApi = "https://api182.patternbased.com/api/hate";
 var randomtiming;
 
 function showNewTweets() {
