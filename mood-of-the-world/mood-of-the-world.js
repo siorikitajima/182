@@ -177,7 +177,7 @@ const xAxis = d3.axisBottom(xScale).tickFormat(d3.timeFormat("%d %b"));
     // .tickSize(-innerHeight);  
 const xAxisG = g.append('g').call(xAxis)
     .attr("class", "x axis")
-    .attr('transform', `translate( 0, ${innerHeight})`)
+    .attr('transform', `translate( 50, ${innerHeight})`)
     .selectAll('text')
         .style('fill', '#dddddd');
 xAxisG.select('.domain').remove();
