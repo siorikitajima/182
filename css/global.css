@@ -534,13 +534,23 @@ div.crimeBox:hover::after {
   background-image: url('../images/love-icon.svg');
 }
 
+.handleG {
+  position: relative;
+}
+path.handleBump {
+  position: absolute;
+  pointer-events: none;
+  /* background-image: url('../images/handle-bump.svg'); */
+}
+
 .timeHandle {
   width: 20px;
   height: 100vh;
-  position: fixed;
+  position: absolute;
 }
-.timeHandle:hover {
-  opacity: 1 !important;
+
+.handleG:hover {
+  opacity: 0.7 !important;
   -webkit-transition-duration: 300ms;
           transition-duration: 300ms;
 }

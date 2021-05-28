@@ -16,7 +16,7 @@ var mongoSummary = "https://api182.patternbased.com/api/summary";
 var loveApi = "https://api182.patternbased.com/api/love";
 var hateApi = "https://api182.patternbased.com/api/hate";
 
-const svg = d3.selectAll(".wrapper").append("svg").attr("width", width).attr("height", height).attr("class", "moodWrapper");
+var svg = d3.selectAll(".wrapper").append("svg").attr("width", width).attr("height", height).attr("class", "moodWrapper");
 
 //// Mood of the world
 
@@ -302,38 +302,60 @@ loveGAfter.append("text")
 //////////// Date Handle ///////////
 ////////////////////////////////////
 
-var timeHandle = svg.append("rect")
+var handleG = svg.append("g").attr("class", "handleG");
+handleG.append("rect")
     .attr("class", "timeHandle")
     .attr("x", portrait? innerWidth -40:innerWidth -20)
     .attr("y", 0)
     .attr("fill", "#ddd")
-    .style('opacity',0)
+    .style("position", "relative")
+handleG.style('opacity',0)
     .transition()
       .delay(6000)
       .duration(500)
-      .style('opacity',1)
-      .transition()
-        .delay(1000)
-        .duration(400)
-        .attr("x", innerWidth -40)
-        .ease(d3.easeSinInOut)
-        .transition()
-            .duration(100)
-            .attr("x", innerWidth -25)
-            .ease(d3.easeSinInOut)
-            .transition()
-                .delay(100)
-                .duration(300)
-                .attr("x", portrait? innerWidth -50:innerWidth -30)
-                .ease(d3.easeSinInOut)
-                .transition()
-                    .duration(200)
-                    .attr("x", portrait? innerWidth -40:innerWidth -20)
-                    .ease(d3.easeSinInOut)
+      .style('opacity',0.7)
+    //   .transition()
+    //     .delay(1000)
+    //     .duration(400)
+    //     .attr("x", innerWidth -40)
+    //     .ease(d3.easeSinInOut)
+    //     .transition()
+    //         .duration(100)
+    //         .attr("x", innerWidth -25)
+    //         .ease(d3.easeSinInOut)
+    //         .transition()
+    //             .delay(100)
+    //             .duration(300)
+    //             .attr("x", portrait? innerWidth -50:innerWidth -30)
+    //             .ease(d3.easeSinInOut)
+    //             .transition()
+    //                 .duration(200)
+    //                 .attr("x", portrait? innerWidth -40:innerWidth -20)
+    //                 .ease(d3.easeSinInOut)
                     .transition()
                         .delay(500)
                         .duration(500)
                         .style('opacity',portrait? 0.3:0.5);
+
+// handleG.append("defs")
+//     .append("pattern")
+//     .attr("id", "bg")
+//     .append("image")
+//     .attr("width", "30px")
+//     .attr("height", "200px")
+//     .attr("xlink:href", "../images/handle-bump.png");
+handleG.append("path")
+    .attr("class", "handleBump")
+    .attr("d", "M30,200c-1-13.4-1.9-29.4-6.2-42.2c-4.1-12.2-8.3-19.9-15.2-31.9c-6.4-11.1-9.7-24-6.4-36.4c3.9-14.6,14.7-28.5,20.4-44.1C27.6,32.2,30,13.9,30,0V200z")
+    .attr("fill", "#ddd")
+    .attr("stroke", "#ddd")
+    .attr("transform", "translate(" + (innerWidth -50) + ", 0)")
+    .attr("width", "30px")
+    .attr("height", "200px");
+    // .style("background-image","url(../images/handle-bump.svg)")
+    // .style("background-size", "cover");
+
+
 var deltaX, newX;
 var dragHandler = d3.drag()
     .on("start", function () {
@@ -387,6 +409,9 @@ var dragHandler = d3.drag()
         .text("Hate tweets on " + selectedDate);
         //Update Sound and Background
         soundUpdate(hateNumber, loveNumber);
+        //Update Handle Bump position
+        d3.selectAll(".handleBump").attr("x", newX -30);
+        handleG.attr("x", newX -30);
         });
     dragHandler(svg.selectAll(".timeHandle"));
 
@@ -791,3 +816,44 @@ function loveNewTweet(tweet, username) {
             }, 7777); 
 
 });
+
+var mouseY = 0;
+svg.on('mousemove', function () {
+    mouseY = d3.mouse(this)[1];
+    mouseX = d3.mouse(this)[0];   
+    currentX = d3.selectAll(".timeHandle").attr("x");
+    distance = currentX - mouseX;
+    d3.selectAll(".handleBump")
+    // .attr("y", mouseY - 100)
+    // .attr("width", bumpWidth())
+    .attr("transform", "translate(" + bumpTranslateX() + "," + (mouseY - 100) + ") scale(" + bumpScaleX() + ", 1)")
+    ;
+    // console.log(distance);
+    // function bumpWidth() {
+    //     if (distance > 300) {
+    //         return 30;
+    //     } else if (distance > 0 && distance < 300) {
+    //         return 30 * (distance/300);
+    //     } else {
+    //         return 0;
+    //     }
+    // }
+    function bumpTranslateX() {
+        if (distance > 300) {
+            return currentX - 30;
+        } else if (distance > 0 && distance < 300) {
+            return currentX - (30 * (distance/300));
+        } else {
+            return currentX;
+        }
+    }
+    function bumpScaleX() {
+        if (distance > 300) {
+            return 1;
+        } else if (distance > 0 && distance < 300) {
+            return distance/300;
+        } else {
+            return 0;
+        }
+    }
+ });
