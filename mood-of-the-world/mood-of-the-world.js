@@ -7,6 +7,7 @@ var loveNewShowing = false;
 var muted = false;
 var hateColor = 'rgb(0)';
 var loveColor = 'rgb(220, 100, 100)';
+var visibility = true;
 
 // var mongoSummary = "../csv/totalMood.json";
 // var loveApi = "../csv/loveApi.json";
@@ -24,10 +25,10 @@ const xScale = d3.scaleTime()
     .range([0, innerWidth])
     .nice();
 const yScaleHate = d3.scaleLinear()
-    .range([0, innerHeight * 0.75])
+    .range([40, innerHeight * 0.75])
     .nice();
 const yScaleLove = d3.scaleLinear()
-    .range([innerHeight, innerHeight * 0.15])
+    .range([innerHeight, innerHeight * 0.25 - 40])
     .nice();
 const g = d3.selectAll(".moodWrapper").append('g');
 
@@ -94,9 +95,11 @@ d3.json(mongoSummary)
   })
 
 // scale the range of the data
-  yScaleHate.domain([d3.min(data, (d) => { return d.hatetweet; }) *0.5, d3.max(data, (d) => { return d.hatetweet; })]);
-  yScaleLove.domain([d3.min(data, (d) => { return d.lovetweet; }), d3.max(data, (d) => { return d.lovetweet; })]);
-  xScale.domain(d3.extent(data, (d) => { return new Date(d.date); }));
+//   yScaleHate.domain([d3.min(data, (d) => { return d.hatetweet; }) *0.5, d3.max(data, (d) => { return d.hatetweet; })]);
+// yScaleLove.domain([d3.min(data, (d) => { return d.lovetweet; }), d3.max(data, (d) => { return d.lovetweet; })]);
+yScaleHate.domain([0, d3.max(data, (d) => { return d.lovetweet; })]);
+yScaleLove.domain([0, d3.max(data, (d) => { return d.lovetweet; })]);
+xScale.domain(d3.extent(data, (d) => { return new Date(d.date); }));
 
 // Date formattings
 var formatting = d3.timeFormat("%b %d");
@@ -170,8 +173,8 @@ lovePool.append("path")
 /////////// AXIS Ticks /////////////
 ////////////////////////////////////
 
-const xAxis = d3.axisBottom(xScale)
-    .tickSize(-innerHeight);  
+const xAxis = d3.axisBottom(xScale).tickFormat(d3.timeFormat("%d %b"));
+    // .tickSize(-innerHeight);  
 const xAxisG = g.append('g').call(xAxis)
     .attr("class", "x axis")
     .attr('transform', `translate( 0, ${innerHeight})`)
@@ -185,7 +188,7 @@ const yHateG = g.append('g').call(yHateAxis)
     .attr('transform', `translate(20, 0)`)
     .selectAll('text')
         .style('text-anchor', 'start')
-        .style('fill', '#999999');
+        .style('fill', 'rgba(255,255,255,0.6)');
 yHateG.attr('opacity', 0)
         .transition()
         .delay(1000)
@@ -207,7 +210,6 @@ const yLoveG = g.append('g').call(yLoveAxis)
     .attr('transform', `translate(${innerWidth - 20}, 0)`)
     .selectAll('text')
         .style('text-anchor', 'end')
-        // .style('mix-blend-mode', 'multiply')
         .style('fill', '#400000');
 yLoveG.attr('opacity', 0)
         .transition()
@@ -347,9 +349,9 @@ var dragHandler = d3.drag()
     })
     .on("end", function() {
         //Get the location + data
-        var location = ((innerWidth - newX)/innerWidth) * (data.length -1),
-        item = Math.round(location);
-        d1 = data[data.length -1 - item];
+        var location = ((innerWidth - newX)/innerWidth) * (data.length -1);
+        var item = Math.round(location);
+        var d1 = data[data.length -1 - item];
         hateNumber = d1.hatetweet;
         loveNumber = d1.lovetweet;
         selectedDate = formatting(d1.date);
@@ -451,23 +453,38 @@ const StartBtn = d3.select(".wrapper").append("div")
         StartBtn.transition().style('opacity',0);
         StartBtn.remove();
         muteIcon.style('background', 'url(../images/mute.svg)');
+        
         showNewTweets();
     });
 
+////////////////////////////////////
+/////////// SOUND CONTROL //////////
+////////////////////////////////////
+
 function soundStart(hate, love) {
     var ratio = hate+love;
+    ratio = ratio.toFixed(0);
     var maxHateValue = d3.max(data, (d) => { return d.hatetweet; });
     var maxLoveValue = d3.max(data, (d) => { return d.lovetweet; });
-    ratio = ratio.toFixed(0);
-    var ratioHate = (hate / ratio) *15 - 5;
+    var minHateValue = d3.min(data, (d) => { return d.hatetweet; });
+    var minLoveValue = d3.min(data, (d) => { return d.lovetweet; });
+    var totalHateRange = maxHateValue - minHateValue;
+    var totalLoveRange = maxLoveValue - minLoveValue;
+    var uniqueHateRange = hate - minHateValue;
+    var uniqueLoveRange = love - minLoveValue;
+    var uniqueHatePosition = uniqueHateRange / totalHateRange;
+    var uniqueLovePosition = uniqueLoveRange / totalLoveRange;
+    
+    var ratioHate = (hate / ratio) *30 - 30; //Volume of Hate (in range of 0 to -30)
     ratioHate = ratioHate.toFixed(1);
+    var ratioLove = (love / ratio) *30 - 30; //Volume of Love (in range of 0 to -30)
+    ratioLove = ratioLove.toFixed(1);
+
     var valueHate = 1 - (hate / maxHateValue);
     valueHate = valueHate.toFixed(1);
-    var valueBigHate = hate / maxHateValue;
+    var valueBigHate = uniqueHatePosition *30 -30; //Volume of Big Hate
     valueBigHate = valueBigHate.toFixed(1);
-    var ratioLove = (love / ratio) *15 - 5;
-    ratioLove = ratioLove.toFixed(1);
-    var valueBigLove = love / maxLoveValue;
+    var valueBigLove = uniqueLovePosition *30 -30; //Volume of Big Love
     valueBigLove = valueBigLove.toFixed(1);
 
     playerBigHate.start();
@@ -475,106 +492,95 @@ function soundStart(hate, love) {
     playerBigLove.start();
     playerBigLove.volume.rampTo(-Infinity, 1);
 
-    if(valueBigHate > 0.75) {
-        playerBigHate.volume.rampTo(valueBigHate*2 -4, 1);
+    if(uniqueHatePosition > 0.5) {
+        playerBigHate.volume.rampTo(0.7 * valueBigHate, 1);
     }
-    if(valueBigLove > 0.75) {
+    if(uniqueLovePosition > 0.5) {
         playerBigLove.volume.rampTo(2 * valueBigLove, 1);
     }
-    playerHate.playbackRate = valueHate;
+    playerHate.playbackRate = valueHate *2;
     playerHate.volume.rampTo(ratioHate, 1);
     playerLove.volume.rampTo(ratioLove, 1);
-    Tone.Transport.bpm.rampTo(ratio, 1);
     playerHate.start();
     playerLove.start();
     
-    bGColor(valueBigHate);
+    // bGColor(uniqueHatePosition, maxHateValue, minHateValue, uniqueLovePosition, maxLoveValue, minLoveValue);
+    bGColor(uniqueHatePosition, uniqueLovePosition);
         
-    console.log('ratioHate (Volume of Hate) = ' + ratioHate + '\nratioLove (Volume of Love) = ' + ratioLove + '\nvalueHate (Playback Rate of Hate) = ' + valueHate + '\nratio (BPM for the whole) = ' + ratio + '\nvalueBigHate (Volume of BigHate) = ' + valueBigHate + '\nvalueBigLove (Volume of BigLove) = ' + valueBigLove );
+    console.log('ratioHate (Volume of Hate) = ' + ratioHate + '\nratioLove (Volume of Love) = ' + ratioLove + '\nvalueHate (Playback Rate of Hate) = ' + valueHate + '\nvalueBigHate (Volume of BigHate) = ' + valueBigHate + '\nvalueBigLove (Volume of BigLove) = ' + valueBigLove );
 
 }
 
 function soundUpdate(hate, love) {
-    var maxHateValue = d3.max(data, (d) => { return d.hatetweet; });
-    var maxLoveValue = d3.max(data, (d) => { return d.lovetweet; });
     var ratio = hate+love;
     ratio = ratio.toFixed(0);
-    var ratioHate = (hate / ratio) *15 - 5;
+    var maxHateValue = d3.max(data, (d) => { return d.hatetweet; });
+    var maxLoveValue = d3.max(data, (d) => { return d.lovetweet; });
+    var minHateValue = d3.min(data, (d) => { return d.hatetweet; });
+    var minLoveValue = d3.min(data, (d) => { return d.lovetweet; });
+    var totalHateRange = maxHateValue - minHateValue;
+    var totalLoveRange = maxLoveValue - minLoveValue;
+    var uniqueHateRange = hate - minHateValue;
+    var uniqueLoveRange = love - minLoveValue;
+    var uniqueHatePosition = uniqueHateRange / totalHateRange;
+    var uniqueLovePosition = uniqueLoveRange / totalLoveRange;
+
+    var ratioHate = (hate / ratio) *30 - 30; //Volume of Hate (in range of 0 to -30)
     ratioHate = ratioHate.toFixed(1);
+    var ratioLove = (love / ratio) *30 - 30; //Volume of Love (in range of 0 to -30)
+    ratioLove = ratioLove.toFixed(1);
+
     var valueHate = 1 - (hate / maxHateValue);
     valueHate = valueHate.toFixed(1);
-    var valueBigHate = hate / maxHateValue;
+    var valueBigHate = uniqueHatePosition *30 -30; //Volume of Big Hate
     valueBigHate = valueBigHate.toFixed(1);
-    var ratioLove = (love / ratio) *15 - 5;
-    ratioLove = ratioLove.toFixed(1);
-    var valueBigLove = love / maxLoveValue;
+    var valueBigLove = uniqueLovePosition *30 -30; //Volume of Big Love
     valueBigLove = valueBigLove.toFixed(1);
 
     if(!muted) {
-        if(valueBigHate > 0.75) {
-            // if(playerBigHate.state == 'started') {
-            //     playerBigHate.volume.rampTo(valueBigHate*2 -4, 1);
-            // } else {
-                // playerBigHate.start();
-                playerBigHate.volume.rampTo(valueBigHate*2 -4, 1);
-            // }
+        if(uniqueHatePosition > 0.5) {
+                playerBigHate.volume.rampTo(0.7 * valueBigHate, 3);
         } else {
-            playerBigHate.volume.rampTo(-Infinity, 1);
-            // playerBigHate.fadeOut = 3000;
-            // playerBigHate.stop();
+            playerBigHate.volume.rampTo(-Infinity, 2);
         }
 
-        if(valueBigLove > 0.75) {
-            // if(playerBigLove.state == 'started') {
-            //     playerBigLove.volume.rampTo(2 * valueBigLove, 1);
-            // } else {
-            //     playerBigLove.start();
-                playerBigLove.volume.rampTo(2 * valueBigLove, 1);
-            // }
+        if(uniqueLovePosition > 0.5) {
+                playerBigLove.volume.rampTo(2 * valueBigLove, 3);
         } else {
-            playerBigLove.volume.rampTo(-Infinity, 1);
-            // playerBigLove.fadeOut = 3000;
-            // playerBigLove.stop();
+            playerBigLove.volume.rampTo(-Infinity, 2);
         }
 
-        playerHate.playbackRate = valueHate;
-        playerLove.playbackRate = 1;
+        playerHate.playbackRate = valueHate *2;
+        // playerLove.playbackRate = 1;
         playerHate.volume.rampTo(ratioHate, 1);
         playerLove.volume.rampTo(ratioLove, 1);
-        Tone.Transport.bpm.rampTo(ratio, 1);
+        // Tone.Transport.bpm.rampTo(ratio, 1);
     } else {}
-    bGColor(valueBigHate);
+    bGColor(uniqueHatePosition, uniqueLovePosition);
 
-    console.log('ratioHate (Volume of Hate) = ' + ratioHate + '\nratioLove (Volume of Love) = ' + ratioLove + '\nvalueHate (Playback Rate of Hate) = ' + valueHate + '\nratio (BPM for the whole) = ' + ratio + '\nvalueBigHate (Volume of BigHate) = ' + valueBigHate + '\nvalueBigLove (Volume of BigLove) = ' + valueBigLove );
+    console.log('ratioHate (Volume of Hate) = ' + ratioHate + '\nratioLove (Volume of Love) = ' + ratioLove + '\nvalueHate (Playback Rate of Hate) = ' + valueHate + '\nvalueBigHate (Volume of BigHate) = ' + valueBigHate + '\nvalueBigLove (Volume of BigLove) = ' + valueBigLove );
 }
 
 ////////////////////////////////////
 //////// BACKGROUND COLOR //////////
 ////////////////////////////////////
 
-function bGColor(valueBigHate) {
-    if(valueBigHate >= 0.8) {
-        d3.selectAll(".moodWrapper")
-        .style('background','#333333')
+function bGColor(hate, love) {
+    var hateRGB = scale(hate, 0, 1, 100, 30);
+    var loveR = scale(hate, 0, 1, 85, 135);
+    var loveGB = scale(hate, 0, 1, -20, 50);
+    var thisR = scale(love, 0, 1, hateRGB, (hateRGB + loveR));
+    var thisGB = scale(love, 0, 1, hateRGB, (hateRGB + loveGB));
+    var thisBGColor = "rgb(" + thisR + "," + thisGB + "," + thisGB + ")";
+    d3.selectAll(".moodWrapper")
+        .style('background', thisBGColor)
         .style('background-image', 'url("../images/45-degree-fabric-light.png")');
-    } else if(valueBigHate >= 0.7) {
-        d3.selectAll(".moodWrapper")
-        .style('background','#444444')
-        .style('background-image', 'url("../images/45-degree-fabric-light.png")');
-    } else if(valueBigHate >= 0.6) {
-        d3.selectAll(".moodWrapper")
-        .style('background','#524141')
-        .style('background-image', 'url("../images/45-degree-fabric-light.png")');
-    } else if(valueBigHate >= 0.5) {
-        d3.selectAll(".moodWrapper")
-        .style('background','#725151')
-        .style('background-image', 'url("../images/45-degree-fabric-light.png")');
-    } else if(valueBigHate < 0.4) {
-        d3.selectAll(".moodWrapper")
-        .style('background','#955b5b')
-        .style('background-image', 'url("../images/45-degree-fabric-light.png")');
-    }
+        console.log("rgb(" + thisR + "," + thisGB + "," + thisGB + ")");
 };
+
+function scale(number, inMin, inMax, outMin, outMax) {
+    return (number - inMin) * (outMax - outMin) / (inMax - inMin) + outMin;
+}
 
 ////////////////////////////////////
 /////// Bubbles + New Tweets ///////
@@ -587,12 +593,12 @@ for(var i=1;i<10;i++){
     hatePool.append("circle")
       .attr("r", 5*i)
       .attr("fill", hateColor)
-      .attr('transform', `translate(${innerWidth*randomCircle},-100)`)
+      .attr('transform', `translate(${innerWidth*randomCircle}, -100)`)
         .transition()
         .duration(2400)
         .delay(function(){return(dl + i*300*randomCircle)})
         .attr('transform', `translate(${innerWidth*randomCircle},${innerHeight+100})`)
-        .ease(d3.easeQuadInOut)
+        .ease(d3.easeLinear)
         .remove();
     }
 }
@@ -606,11 +612,43 @@ for(var i=1;i<10;i++){
         .transition()
         .duration(4600)
         .delay(function(){return(dl + i*300*randomCircle)})
-        .attr('transform', `translate(${innerWidth*randomCircle},-100)`)
+        .attr('transform', `translate(${innerWidth*randomCircle}, -100)`)
         .ease(d3.easeQuadIn)
         .remove();
     }
 }
+function miniHateBubbles(max) {
+    for(var i=1;i<10;i++){
+        var randomCircle = Math.random();
+        var bubbleX = scale(randomCircle, 0, 1, (max - 40), (max + 60));
+        hatePool.append("circle")
+          .attr("r", 2*i)
+          .attr("fill", hateColor)
+          .attr('transform', `translate(${bubbleX}, -100)`)
+            .transition()
+            .duration(3600)
+            .delay(function(){return(i*600*randomCircle)})
+            .attr('transform', `translate(${bubbleX},${innerHeight+100})`)
+            .ease(d3.easeLinear)
+            .remove();
+        }
+    }
+function miniLoveBubbles(max) {
+        for(var i=1;i<10;i++){
+            var randomCircle = Math.random();
+            var bubbleX = scale(randomCircle, 0, 1, (max - 30), (max + 70));
+            lovePool.append("circle")
+              .attr("r", 2*i)
+              .attr("fill", loveColor)
+              .attr('transform', `translate(${bubbleX},${innerHeight+100})`)
+                .transition()
+                .duration(4800)
+                .delay(function(){return(i*770*randomCircle)})
+                .attr('transform', `translate(${bubbleX}, -100)`)
+                .ease(d3.easeQuadInOut)
+                .remove();
+            }
+        }
 
 //// New Tweets ////
 var randomtiming;
@@ -727,4 +765,29 @@ function loveNewTweet(tweet, username) {
             .remove();
     playerNewLove.start();
 };
+
+        setInterval(function() {
+            var maxHAll = d3.max(data, (d) => { return d.hatetweet; });
+            var posObj = data.filter(e => e.hatetweet===maxHAll);
+            var pos = d3.selectAll(".hatePool").append("circle")
+            .attr("height", 2)
+            .attr("width", 2)
+            .attr("cx", xScale(posObj[0].date));
+            var posX = pos._groups[0][0].cx.animVal.value
+        
+            miniHateBubbles(posX);
+            }, 11111);
+        
+        setInterval(function() {
+            var maxLAll = d3.max(data, (d) => { return d.lovetweet; });
+            var posObj = data.filter(e => e.lovetweet===maxLAll);
+            var pos = d3.selectAll(".lovePool").append("circle")
+            .attr("height", 2)
+            .attr("width", 2)
+            .attr("cx", xScale(posObj[0].date));
+            var posX = pos._groups[0][0].cx.animVal.value
+        
+            miniLoveBubbles(posX);
+            }, 7777); 
+
 });
