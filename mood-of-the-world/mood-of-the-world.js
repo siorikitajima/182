@@ -493,10 +493,10 @@ function soundStart(hate, love) {
     playerBigLove.volume.rampTo(-Infinity, 1);
 
     if(uniqueHatePosition > 0.5) {
-        playerBigHate.volume.rampTo(0.7 * valueBigHate, 1);
+        playerBigHate.volume.rampTo(1 * valueBigHate, 1);
     }
     if(uniqueLovePosition > 0.5) {
-        playerBigLove.volume.rampTo(2 * valueBigLove, 1);
+        playerBigLove.volume.rampTo(1 * valueBigLove, 1);
     }
     playerHate.playbackRate = valueHate *2;
     playerHate.volume.rampTo(ratioHate, 1);
@@ -539,13 +539,13 @@ function soundUpdate(hate, love) {
 
     if(!muted) {
         if(uniqueHatePosition > 0.5) {
-                playerBigHate.volume.rampTo(0.7 * valueBigHate, 3);
+                playerBigHate.volume.rampTo(1 * valueBigHate, 3);
         } else {
             playerBigHate.volume.rampTo(-Infinity, 2);
         }
 
         if(uniqueLovePosition > 0.5) {
-                playerBigLove.volume.rampTo(2 * valueBigLove, 3);
+                playerBigLove.volume.rampTo(1 * valueBigLove, 3);
         } else {
             playerBigLove.volume.rampTo(-Infinity, 2);
         }
