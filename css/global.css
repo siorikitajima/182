@@ -90,12 +90,21 @@ p {
   top: 40px;
   right: -400px;
   z-index: 400;
+  overflow-y: scroll;
   border-left: 1px rgba(221, 221, 221, 0.5) solid;
   line-height: 1.5em;
   -webkit-transition-duration: 500ms;
           transition-duration: 500ms;
   -webkit-transition-timing-function: ease-out;
           transition-timing-function: ease-out;
+}
+
+.rightPanel h3 {
+  padding-top: 20px;
+}
+
+.rightPanel p {
+  letter-spacing: 0.05em;
 }
 
 .wrapper {
@@ -186,6 +195,7 @@ p {
 .x.axis text, .y.axis text {
   /* color: #ddd; */
   font-size: 1.2em;
+  font-family: "Dosis", sans-serif;
   mix-blend-mode: normal;
 }
 
@@ -448,12 +458,12 @@ div.crimeBox:hover::after {
 
 .lovePool {
   mix-blend-mode: color-dodge;
-  opacity: 0.4;
+  /* opacity: 0.4; */
 }
 
 .hatePool {
   mix-blend-mode: soft-light;
-  opacity: 0.6;
+  /* opacity: 0.6; */
 }
 
 .hateText, .hateTextAfter, .loveText, .loveTextAfter {

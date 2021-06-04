@@ -111,11 +111,12 @@ var currentLove = data[reverseDate].lovetweet;
 ////////////////////////////////////
 ////////// Area Charts /////////////
 ////////////////////////////////////
-const hatePool = g.append("g").attr("class","hatePool");
-const lovePool = g.append("g").attr("class","lovePool");
+const hatePool = g.append("g").attr("class","hatePool").style("opacity", 0.6);
+const lovePool = g.append("g").attr("class","lovePool").style("opacity", 0.4);
 
 hatePool.append("path")
        .data([data])
+       .attr("class", "hateChart")
        .attr("d", areaHateBefore)
        .attr('fill', hateColor)
        .transition()
@@ -173,7 +174,7 @@ lovePool.append("path")
 /////////// AXIS Ticks /////////////
 ////////////////////////////////////
 
-const xAxis = d3.axisBottom(xScale).tickFormat(d3.timeFormat("%d %b"));
+const xAxis = d3.axisBottom(xScale).ticks(portrait? 6 : null).tickFormat(d3.timeFormat("%d %b"));
     // .tickSize(-innerHeight);  
 const xAxisG = g.append('g').call(xAxis)
     .attr("class", "x axis")
@@ -238,9 +239,9 @@ var hateText = hateG.append("text")
       .text(0)
       .style('opacity',0)
       .on("mouseover", function(){
-        yHateG.style('opacity', 1);})
+        hateFocus();})
       .on("mouseout", function(){
-        yHateG.style('opacity', 0.5);})
+        hateUnFocus();})
       .transition()
         .delay(1000)
         .duration(500)
@@ -271,9 +272,9 @@ var loveText = loveG.append("text")
       .text(0)
       .style('opacity',0)
       .on("mouseover", function(){
-        yLoveG.style('opacity', 1);})
+        loveFocus();})
       .on("mouseout", function(){
-        yLoveG.style('opacity', 0.5);})
+        loveUnFocus();})
       .transition()
         .delay(4000)
         .duration(500)
@@ -351,7 +352,8 @@ handleG.append("path")
     .attr("stroke", "#ddd")
     .attr("transform", "translate(" + (innerWidth -50) + ", 0)")
     .attr("width", "30px")
-    .attr("height", "200px");
+    .attr("height", "200px")
+    .style("display", portrait? "none" : "static");
     // .style("background-image","url(../images/handle-bump.svg)")
     // .style("background-size", "cover");
 
@@ -677,6 +679,8 @@ function miniLoveBubbles(max) {
 
 //// New Tweets ////
 var randomtiming;
+// var urlRegex = https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*);
+var urlRegex = /(?:https?|ftp):\/\/[\n\S]+/g;
 
 function showNewTweets() {
     // The first tweets
@@ -701,6 +705,9 @@ function showNewTweets() {
     .then(res => {
         var lastNumber = res.length -1;
         var latestLove = res[lastNumber].tweet;
+        if (latestLove.includes("http")) {
+            var latestLove = latestLove.replace(urlRegex, '');
+        }
         var latestLoveUser = res[lastNumber].twitter_handle;
         console.log(latestLove, latestLoveUser);
         loveBubbles(0); 
@@ -721,6 +728,9 @@ function showNewTweets() {
         .then(res => {
             var lastNumber = res.length -1;
             var latestHate = res[lastNumber].tweet;
+            if (latestHate.includes("http")) {
+                latestHate = latestHate.replace(urlRegex, '');
+            }
             var latestHateUser = res[lastNumber].twitter_handle;
             console.log(latestHate, latestHateUser);
             hateBubbles(0); 
@@ -754,7 +764,7 @@ function hateNewTweet(tweet, username) {
         .style("top", "50%")
         .style("opacity",1)
         .transition()
-            .delay(4000)
+            .delay(6000)
             .duration(500)
             .style("opacity", 0)
             .remove();
@@ -784,7 +794,7 @@ function loveNewTweet(tweet, username) {
         .style("top", "50%")
         .style("opacity",1)
         .transition()
-            .delay(4000)
+            .delay(6000)
             .duration(500)
             .style("opacity", 0)
             .remove();
@@ -857,3 +867,39 @@ svg.on('mousemove', function () {
         }
     }
  });
+
+ function hateFocus() {
+    var hatePool = d3.selectAll('.hatePool');
+    var hateAxis = d3.selectAll('.axis.y.hate').selectAll('text');
+    var hateText = d3.selectAll('.hateText');
+    var hateTextAfter = d3.selectAll('.hateTextAfter');
+    hatePool.style('opacity', 1);
+    hateAxis.style('fill', 'rgba(255,255,255,1)').style('opacity', 1);
+    hateText.style('color', 'rgba(255,255,255,1)');
+    hateTextAfter.style('color', 'rgba(255,255,255,1)');
+ }
+
+ function hateUnFocus() {
+    var hatePool = d3.selectAll('.hatePool');
+    var hateAxis = d3.selectAll('.axis.y.hate').selectAll('text');
+    var hateText = d3.selectAll('.hateText');
+    var hateTextAfter = d3.selectAll('.hateTextAfter');
+    hatePool.style('opacity', 0.6);
+    hateAxis.style('fill', 'rgba(255,255,255,0.6)').style('opacity', 0.5);
+    hateText.style('color', 'rgba(255,255,255,0.6)');
+    hateTextAfter.style('color', 'rgba(255,255,255,0.6)');
+ }
+
+ function loveFocus() {
+    var lovePool = d3.selectAll('.lovePool');
+    var loveAxis = d3.selectAll('.axis.y.love').selectAll('text');
+    lovePool.style('opacity', 0.7);
+    loveAxis.style('opacity', 1);
+ }
+
+ function loveUnFocus() {
+    var lovePool = d3.selectAll('.lovePool');
+    var loveAxis = d3.selectAll('.axis.y.love').selectAll('text');
+    lovePool.style('opacity', 0.4);
+    loveAxis.style('opacity', 0.5);
+ }
