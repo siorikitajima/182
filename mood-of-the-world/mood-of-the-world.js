@@ -315,36 +315,11 @@ handleG.style('opacity',0)
       .delay(6000)
       .duration(500)
       .style('opacity',0.7)
-    //   .transition()
-    //     .delay(1000)
-    //     .duration(400)
-    //     .attr("x", innerWidth -40)
-    //     .ease(d3.easeSinInOut)
-    //     .transition()
-    //         .duration(100)
-    //         .attr("x", innerWidth -25)
-    //         .ease(d3.easeSinInOut)
-    //         .transition()
-    //             .delay(100)
-    //             .duration(300)
-    //             .attr("x", portrait? innerWidth -50:innerWidth -30)
-    //             .ease(d3.easeSinInOut)
-    //             .transition()
-    //                 .duration(200)
-    //                 .attr("x", portrait? innerWidth -40:innerWidth -20)
-    //                 .ease(d3.easeSinInOut)
                     .transition()
                         .delay(500)
                         .duration(500)
                         .style('opacity',portrait? 0.3:0.5);
 
-// handleG.append("defs")
-//     .append("pattern")
-//     .attr("id", "bg")
-//     .append("image")
-//     .attr("width", "30px")
-//     .attr("height", "200px")
-//     .attr("xlink:href", "../images/handle-bump.png");
 handleG.append("path")
     .attr("class", "handleBump")
     .attr("d", "M30,200c-1-13.4-1.9-29.4-6.2-42.2c-4.1-12.2-8.3-19.9-15.2-31.9c-6.4-11.1-9.7-24-6.4-36.4c3.9-14.6,14.7-28.5,20.4-44.1C27.6,32.2,30,13.9,30,0V200z")
@@ -354,8 +329,6 @@ handleG.append("path")
     .attr("width", "30px")
     .attr("height", "200px")
     .style("display", portrait? "none" : "static");
-    // .style("background-image","url(../images/handle-bump.svg)")
-    // .style("background-size", "cover");
 
 
 var deltaX, newX;
@@ -902,4 +875,17 @@ svg.on('mousemove', function () {
     var loveAxis = d3.selectAll('.axis.y.love').selectAll('text');
     lovePool.style('opacity', 0.4);
     loveAxis.style('opacity', 0.5);
+ }
+
+ function showHandle() {
+     var timeHandle = d3.selectAll('.timeHandle');
+     var currentX = timeHandle.attr("x");
+     timeHandle.attr("x", currentX)
+     .transition()
+        .duration(500)
+        .attr("x", 100)
+        .transition()
+            .duration(1200)
+            .delay(300)
+            .attr("x", currentX);
  }
