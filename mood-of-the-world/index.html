@@ -23,25 +23,25 @@
     
     <div class="rightPanel">
         <div>
-            <p><b>Pulse of Love and Hate</b> is an interactive data visualization + audiation of how Love and Hate appear in Twitter. Many of us spend some time reading at online news platforms and social medias, without knowing how biased, curated, or personalized the list of news we see. This project started from a simple question "Is the world actually feel this way? or is it the algorism of what I see?" This simple info-art lets us see the real number of one small aspect of people's emotional mood by their tweets. Come seeing them when you want to peak at how/what people love and hate at this moment.</p>
+            <p><b>Pulse of Love and Hate</b> is an interactive and sonified data visualization of the cumulative daily occurance of the words 'Love' and 'Hate' in Twitter. Many users spend time reading various online news platforms and social media without knowing how biased, curated, or personalized the content is. This project started from a simple question "Does the world actually feel the way it appears to me online?.. or are a series of algorithms behind my notion of the mood of the world?" This simple info-art lets us see the real number of one small aspect of people's emotional mood by their tweets. Come take a peak at how and what people 'Love' and 'Hate' at this very moment.</p>
 
             <h3>:: Legend ::</h3>
-            <p id="legHate" onmouseover="hateFocus()" onmouseout="hateUnFocus()">Hate chart is hanging down from the top of the screen</p>
-            <p id="legLove" onmouseover="loveFocus()" onmouseout="loveUnFocus()">Love chart is showing up from the bottom of the screen</p>
+            <p id="legHate" onmouseover="hateFocus()" onmouseout="hateUnFocus()">The Hate chart is hanging down from the top of the screen</p>
+            <p id="legLove" onmouseover="loveFocus()" onmouseout="loveUnFocus()">The Love chart is rising up from the bottom of the screen</p>
             <p id="legHandle" onmouseover="showHandle()">You can move this handle to the left to change the date</p>
-            <p>Music and color changes for the ratio of Hate and Love in the selected date. More Love = happier, more Hate = darker.</p>
-            <p>The highest number of each Hate and Love are indicated with little bubbles</p>
+            <p>The sound and color changes for the ratio of Hate and Love on the selected date. More Love = happier, more Hate = darker.</p>
+            <p>The highest numbers of Hate and Love are indicated with little bubbles</p>
 
             <h3>:: LOVE vs HATE ::</h3>
             <p>This app counts number of all tweets with 'Love' and 'Hate' every day. Queries used for the search are below. Retweets, Replies, and tweets @mentioning other Twitter users and having outside links are excluded.</p>
-            <p><b>LOVE</b> = Tweets including the keyword 'Love', and not including keywords 'hate' 'kill' 'die' 'murder' 'sex' 'disgusting' 'hatred' 'murder'</p>
+            <p><b>LOVE</b> = Tweets including the keyword 'Love', and not including keywords 'hate' 'kill' 'die' 'murder' 'sex' 'disgusting' 'hatred'</p>
             <p><b>HATE</b> = Tweets including the keyword 'Hate', and not including keywords 'love' 'happy' 'enjoy' 'warmth' 'sex' 'sweet' 'lovely' 'happiness'</p>
             <p>Real time new tweets of Love and Hate are displayed every 30 seconds.</p>
 
             <h3>:: Credits ::</h3>
             <p>Concept by <a href='https://www.josephminadeo.com' target='_blank'>Joseph Minadeo</a> + <a href='https://www.siorikitajima.com' target='_blank'>Siori Kitajima</a><br/>
             Art and Code by Siori Kitajima<br/>
-            Music by Joseph Minadeo<br/>
+            Sound by Joseph Minadeo<br/>
             Created in an online artist residency program 2020 - 2021 by <a href='https://www.perfec-art.com/' target='_blank'>Buckwheat Space</a></p>
 
             <p>Made with amazing tools: <a href='https://d3js.org/' target='_blank'>D3.js</a>, <a href='https://tonejs.github.io/' target='_blank'>Tone.js</a>, <a href='https://nodejs.org/' target='_blank'>Node.js</a>, <a href='https://www.mongodb.com/' target='_blank'>MongoDB</a>, <a href='https://www.npmjs.com/package/node-cron' target='_blank'>Node-Cron</a>, <a href='https://www.npmjs.com/package/twit' target='_blank'>Twit</a>, <a href='https://expressjs.com/' target='_blank'>Express.js</a>, <a href='https://developer.twitter.com/' target='_blank'>Twitter API</a> and more</p>
