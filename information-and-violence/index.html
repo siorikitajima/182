@@ -53,10 +53,11 @@
     <script src="../js/global.js"></script>
     <script src="info-and-violence.js"></script>
     <script>
+      var leftScroll =  innerHeight > innerWidth ? innerWidth * 3: innerWidth;
       setTimeout(() => {
         seamless.elementScroll(
             document.querySelector(".wrapper"),
-            {   left: 1200,
+            {   left: leftScroll,
                 behavior: 'smooth',
             },
         );
