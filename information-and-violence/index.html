@@ -3,10 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../css/global.css">
+    <link rel="stylesheet" href="../css/infoviolence.css">
     <!-- <script src="https://d3js.org/d3.v5.js"></script> -->
     <script src="../js/d3.v5.js"></script>
-    <title>1.82% | Information and Violence</title>
+    <script src="../js/seamless.js"></script>
+    <title>1.82% | Info and Violence</title>
     <link rel="icon"  type="image/png"  href="../favicon.ico" />
     <link rel="apple-touch-icon" sizes="1512x512" href="../logo512.png" />
     <link rel="icon" sizes="192x192" href="../logo192.png" />
@@ -14,23 +15,52 @@
 <body>
     <div class="header">
         <div class="headerLeft" onclick="rightPanelClose()"><a href="../">1.82%</a></div>
-        <div> :: information and violence :: </div>
+        <div> :: info & violence :: </div>
         <div class="headerRight" onclick="rightPanelMove()">SOURCE</div>
     </div>
     <div class="rightPanel">
         <div>
-            <p>Legend<br/>
-                Tutorial<br/>
-                Concept<br/>
-                Sources<br/>
-                and Credit<br/>
-                will be here.
+            <p><b>Information and Violence</b> is an interactive data visualization of showing correlations between news and violence. The number of homicides and gun sales have kept growing. By seeing violent news, do we also feel violent? And/or, do we feel defensive and buy guns, which could cause more violence?</p>
+
+            <h3>:: Legend ::</h3>
+            <p id="legHom">Monthly Homicide counts in U.S.</p>
+            <p id="legGun">Estimated monthly gun sales in U.S.</p>
+            <p id="legEvent">News events related to violence, politics and guns. Click or tap to see more about the event.</p>
+            <p>The screen is scrollable horizontally. Timeline captured in the current version is from January 2016 to January 2021.</p>
+            <p>For both Homicides and Gun Sales, the bottom of the screen is 0, and the higher the chart, the higher the number is. If you see this on screen, hover over with your mouse on the charts to see the number. On mobile devices, tap on the charts instead.</p>
+
+            <h3>:: Data Sources ::</h3>
+            <p><b>HOMICIDES</b> = From 2016 to 2019, the data is from <a href='https://wonder.cdc.gov/' target='_blank'>CDC WONDER Data Archive</a>. From 2020, since the data publishing by CDC has been paused since the COVID pandemic, we used the estimated monthly homicide numbers from <a href='https://cdn.ymaws.com/counciloncj.org/resource/resmgr/covid_commission/Year_End_Crime_Update_Design.pdf' target='_blank'>the report published by CCJ National Commission on COVID-19 and Criminal Justice</a>.</p>
+            <p><b>GUN SALES</b> = <a href='https://brady-static.s3.amazonaws.com/NICSdata-year.pdf' target='_blank'>Brady's estimated monthly gun sales</a>, which is caluculated based on <a href='https://www.fbi.gov/services/cjis/nics' target='_blank'>NICS</a>'s background check for firearm sales.</p>
+            <p><b>NEWS EVENTS</b> = Violence related news events picked from Wikipedia's list of incidences in U.S. <a href='https://en.wikipedia.org/wiki/2016_in_the_United_States' target='_blank'>2016 in the United States</a>, <a href='https://en.wikipedia.org/wiki/2017_in_the_United_States' target='_blank'>2017 in the United States</a>, <a href='https://en.wikipedia.org/wiki/2018_in_the_United_States' target='_blank'>2018 in the United States</a>, <a href='https://en.wikipedia.org/wiki/2019_in_the_United_States' target='_blank'>2019 in the United States</a>, <a href='https://en.wikipedia.org/wiki/2020_in_the_United_States' target='_blank'>2020 in the United States</a>, <a href='https://en.wikipedia.org/wiki/2021_in_the_United_States' target='_blank'>2021 in the United States</a>.</p>
+
+            <h3>:: Credits ::</h3>
+            <p>Research, Art and Code by <a href='https://www.siorikitajima.com' target='_blank'>Siori Kitajima</a><br/>
+            Created in an online artist residency program 2020 - 2021 by <a href='https://www.perfec-art.com/' target='_blank'>Buckwheat Space</a></p>
+
+            <p>Made with amazing tools: <a href='https://d3js.org/' target='_blank'>D3.js</a> and more</p>
+            <p>Thank you <a href='https://www.yvonnebuchanan-art.com/' target='_blank'>Yvonne Buchanan</a>, <a href='https://dorenequinn-artist.com/' target='_blank'>Dorene Quinn</a>, Corrabelle and Orlando.
             </p>
+            
+            <p>Powered by <a href='https://www.patternbased.com/' target='_blank'>PatternBased</a><br/>
+            Released under <a href='https://opensource.org/licenses/MIT' target='_blank'>MIT License</a><br/>
+            Copyright © 2021 PatternBased</p>
+            <p></p>
         </div>
     </div>
     <div class="wrapper">
     </div>
     <script src="../js/global.js"></script>
     <script src="info-and-violence.js"></script>
+    <script>
+      setTimeout(() => {
+        seamless.elementScroll(
+            document.querySelector(".wrapper"),
+            {   left: 1200,
+                behavior: 'smooth',
+            },
+        );
+      }, 5000);
+    </script>
 </body>
 </html>
