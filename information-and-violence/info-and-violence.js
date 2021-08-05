@@ -16,6 +16,28 @@ const svg = d3.selectAll(".wrapper")
     .attr("width", portrait ? width *4 : width*2 )
     .attr("height", height )
     .attr("class", "infoWrapper");
+const gEv = d3.selectAll(".infoWrapper").append('g');
+
+////////////////////////////////////
+//////  Rendering with Data  ///////
+////////////////////////////////////
+d3.csv('../csv/events-all.csv')
+.then(datasetEv => {
+  datasetEv.forEach(de => {
+    de.duration = +de.duration;
+    de.name = de.name;
+    de.note = de.note;
+    de.link = de.link;
+    de.media = de.media;
+    de.num = +de.num;
+    de.mediaurl = de.mediaurl;
+    de.credit = de.credit;
+    de.crediturl = de.crediturl;
+    de.caption = de.caption;
+    de.date = new Date(de.date);
+  });
+  renderEv(datasetEv);
+});
 
 ////////////////////////////////////
 ////////////// Events //////////////
@@ -30,8 +52,7 @@ var formatting = d3.timeFormat("%B %d %Y");
       // .domain(d3.extent(datasetEv, xValueEv))
       .domain([new Date("2016-01-07"), new Date("2021-01-31")])
       .range(portrait? [0, innerWidth *4]:[0, innerWidth*2]);
-    const gEv = d3.selectAll(".infoWrapper").append('g')
-      .attr('transform', `translate(${margin.left},${margin.top})`);
+
     //// X axis for Events preserved for testing ///
     // const xAxisEv = d3.axisBottom(xScaleEv)
     //   .tickSize(-innerHeight)
@@ -72,6 +93,8 @@ var formatting = d3.timeFormat("%B %d %Y");
     ////////////////////////////////////
     /////////// Draw Events /////////////
     //////////////////////////////////// 
+    d3.timeout(loadEvent, 4000);
+    function loadEvent() {
         const thechartWidth = portrait? innerWidth *4:innerWidth*2;
         const daysize = thechartWidth / 1840; // total days from 1/1/2016 - 1/20/2021
         const wValue = de => de.duration < 5 ? 5 + 'px' : de.duration * daysize + 'px';
@@ -94,7 +117,7 @@ var formatting = d3.timeFormat("%B %d %Y");
             .ease(d3.easeSinOut)
             .attr('height', '100%') 
             .style('opacity', 0.3)
-            .delay(function(de,i){return(4000 + i* 30 * Math.random())})
+            .delay(function(de,i){return(i* 30 * Math.random())})
             .transition()
                 .style('opacity', 0.5)
                 .delay(function(de,i){return(i*10)});
@@ -127,6 +150,7 @@ var formatting = d3.timeFormat("%B %d %Y");
             showViewer(de);
           });
       };
+    }
   
   ////////////////////////////////////
   /////////// Event Viewer ///////////
@@ -235,27 +259,6 @@ var formatting = d3.timeFormat("%B %d %Y");
         return ("<img src='../images/image-placeholder.jpg'/>")
       }}
 };
-
-////////////////////////////////////
-//////  Rendering with Data  ///////
-////////////////////////////////////
-d3.csv('../csv/events-all.csv')
-.then(datasetEv => {
-  datasetEv.forEach(de => {
-    de.duration = +de.duration;
-    de.name = de.name;
-    de.note = de.note;
-    de.link = de.link;
-    de.media = de.media;
-    de.num = +de.num;
-    de.mediaurl = de.mediaurl;
-    de.credit = de.credit;
-    de.crediturl = de.crediturl;
-    de.caption = de.caption;
-    de.date = new Date(de.date);
-  });
-  renderEv(datasetEv);
-});
 
 ////////////////////////////////////
 ///////  Violence line charts  /////
