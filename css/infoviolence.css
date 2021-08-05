@@ -28,8 +28,8 @@ p {
 .header {
   width: calc(100vw - 16px);
   height: 24px;
-  position: -webkit-sticky;
-  position: sticky;
+  /* position: -webkit-sticky;
+  position: sticky; */
   left: 0;
   top: 0;
   background-color: #111;
@@ -38,7 +38,7 @@ p {
   font-size: 1.1em;
   font-weight: bold;
   padding: 8px;
-  z-index: 500;
+  z-index: 5000;
   border-bottom: 1px rgba(221, 221, 221, 0.5) solid;
   display: -webkit-box;
   display: -ms-flexbox;
@@ -259,7 +259,7 @@ p {
   height: 100%; */
   /* background: linear-gradient(to bottom right, rgba(158, 74, 232, 0.533), rgba(255, 98, 0, 0.5)),
   url("../images/45-degree-fabric-light.png"); */
-  background: linear-gradient(rgba(174, 117, 159, 0.5), rgba(174, 117, 159, 0.5)),
+  background: linear-gradient(rgba(51, 52, 139, 0.5), rgba(174, 117, 159, 0.5)),
   url("../images/45-degree-fabric-light.png");
   color: #ddd;
 }
@@ -275,6 +275,7 @@ p {
 }
 
 .events {
+    mix-blend-mode: normal;
   /* mix-blend-mode:soft-light; */
   fill: #FF7D00;
   -webkit-transition-duration: 100ms;
@@ -290,6 +291,10 @@ p {
   pointer-events: none;
 }
 
+/* .mouse-line {
+    position: relative;
+} */
+
 .mouse-per-line circle {
   position: relative;
 }
@@ -300,6 +305,16 @@ p {
   top: 0;
   left: 0;
   transform: translate(-20px, -20px);
+}
+
+.mobileHandle {
+    fill: #111;
+    position: relative;
+}
+.mobileHandleImg {
+    position: absolute;
+    top: 0;
+    left: 0;
 }
 
 div.tooltipEv {

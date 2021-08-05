@@ -1,3 +1,11 @@
+document.addEventListener("DOMContentLoaded", function(e) {
+
+const isTouchDevice = () => {
+  return (('ontouchstart' in window) ||
+    (navigator.maxTouchPoints > 0) ||
+    (navigator.msMaxTouchPoints > 0));
+}
+
 const margin = { top: 0, right: 0, bottom: 30, left: 0 };
 const innerWidth = width;
 const innerHeight = height - margin.top - margin.bottom;
@@ -5,8 +13,8 @@ var portrait = innerHeight > innerWidth ? true : false;
 
 const svg = d3.selectAll(".wrapper")
     .append("svg")
-    .attr("width", portrait ? width *4 : width*2)
-    .attr("height", height)
+    .attr("width", portrait ? width *4 : width*2 )
+    .attr("height", height )
     .attr("class", "infoWrapper");
 
 ////////////////////////////////////
@@ -109,7 +117,7 @@ var formatting = d3.timeFormat("%B %d %Y");
             divEv.style("top", (d3.event.pageY - 28) + "px");	
         })			
         .on("mouseout", function(de) {
-          d3.select(this).style("mix-blend-mode","soft-light").style('opacity',0.8);
+          d3.select(this).style("mix-blend-mode","normal").style('opacity',0.8);
             divEv.transition()		
                 .duration(500)		
                 .style("opacity", 0);	
@@ -158,6 +166,7 @@ var formatting = d3.timeFormat("%B %d %Y");
       const spaces = thisEv.getBoundingClientRect();
       if(spaces.x + spaces.width > innerWidth || spaces.x < 0) {
         seamless.elementScrollIntoView(thisEv, {
+          block: "end",
           behavior: 'smooth',
         })
         // thisEv.scrollIntoView();
@@ -182,6 +191,7 @@ var formatting = d3.timeFormat("%B %d %Y");
       const spaces = thisEv.getBoundingClientRect();
       if(spaces.x > innerWidth || spaces.x < 0) {
         seamless.elementScrollIntoView(thisEv, {
+          block: "end",
           behavior: 'smooth',
         })
         // thisEv.scrollIntoView();
@@ -225,6 +235,27 @@ var formatting = d3.timeFormat("%B %d %Y");
         return ("<img src='../images/image-placeholder.jpg'/>")
       }}
 };
+
+////////////////////////////////////
+//////  Rendering with Data  ///////
+////////////////////////////////////
+d3.csv('../csv/events-all.csv')
+.then(datasetEv => {
+  datasetEv.forEach(de => {
+    de.duration = +de.duration;
+    de.name = de.name;
+    de.note = de.note;
+    de.link = de.link;
+    de.media = de.media;
+    de.num = +de.num;
+    de.mediaurl = de.mediaurl;
+    de.credit = de.credit;
+    de.crediturl = de.crediturl;
+    de.caption = de.caption;
+    de.date = new Date(de.date);
+  });
+  renderEv(datasetEv);
+});
 
 ////////////////////////////////////
 ///////  Violence line charts  /////
@@ -336,13 +367,13 @@ var formatting = d3.timeFormat("%B %d %Y");
         .attr('fill', d => colorScale(d.key))
         .style('opacity', 0)
         .on('mousemove', updateTooltips)
-        .on('mouseover', showTooltips)
-        .on('mouseout', hideTooltips)
+        // .on('mouseover', showTooltips)
+        // .on('mouseout', hideTooltips)
         .transition()
-          .style('opacity', 0.6)
+          .style('opacity', 0.8)
           .attr('d', d => areaGenerator(d.values))
           .duration(1500)
-          .delay(function(de,i){return(200+ i*2000)})
+          .delay(function(d,i){return(1000+ (-i)*2000)})
           .ease(d3.easeSinOut);
 
     ////////////////////////////////////
@@ -400,35 +431,88 @@ var formatting = d3.timeFormat("%B %d %Y");
       .attr("class", "textTT")
       .style("fill", "#ddd")
       .style("opacity", "0");
+    if(isTouchDevice()) {
+    mouseG.append("image")
+      .attr("class", "mobileHandle")
+      .attr('width', 40).attr('height', 40)
+      .attr("xlink:href", "../images/handle-icon.svg")
+      .style("opacity", "0");
+    }
+    
+      showTooltips();
 
-    function hideTooltips() {
-        d3.select(".mouse-line")
-          .style("opacity", "0");
-        d3.selectAll(".mouse-per-line circle")
-          .style("opacity", "0");
-        d3.selectAll(".mouse-per-line text")
-          .style("opacity", "0");
-        d3.selectAll(".mouse-circle-img")
-          .style("opacity", "0");
-      };
-    function showTooltips() {
-        d3.select(".mouse-line")
-          .style("opacity", "1");
-        d3.selectAll(".mouse-per-line circle")
-          .style("opacity", "1");
-        d3.selectAll(".mouse-per-line text")
-          .style("opacity", "1");
-        d3.selectAll(".mouse-circle-img")
-          .style("opacity", "1");
+    if(isTouchDevice()) {
+      const thechartWidth = portrait? innerWidth *4:innerWidth*2;
+      var deltaX, newX;
+      var dragHandler = d3.drag()
+          .on("start", function () {
+              deltaX = d3.event.x;
+          })
+          .on("drag", function () {
+              newX = d3.event.x;
+              if(newX < 10) { newX = 10;}
+              if(newX > thechartWidth - 10) {newX = thechartWidth - 10;}
+              var handle = d3.select(this);
+              handle.attr("transform", `translate(${newX}, 0)`);
+              updateTooltipsNumber(newX, height/2);
+          })
+          .on("end", function() {
+            updateTooltipsNumber(newX, height/2);
+          });
+        dragHandler(svg.selectAll(".mobileHandle"));
       }
-    function updateTooltips() {
-        var mouse = d3.mouse(this);
+    // function hideTooltips() {
+    //     d3.select(".mouse-line")
+    //       .style("opacity", "0");
+    //     d3.selectAll(".mouse-per-line circle")
+    //       .style("opacity", "0");
+    //     d3.selectAll(".mouse-per-line text")
+    //       .style("opacity", "0");
+    //     d3.selectAll(".mouse-circle-img")
+    //       .style("opacity", "0");
+    //   };
+    // function showTooltips() {
+    //     d3.select(".mouse-line")
+    //       .style("opacity", "1");
+    //     d3.selectAll(".mouse-per-line circle")
+    //       .style("opacity", "1");
+    //     d3.selectAll(".mouse-per-line text")
+    //       .style("opacity", "1");
+    //     d3.selectAll(".mouse-circle-img")
+    //       .style("opacity", "1");
+    //   }
+
+    function showTooltips() {
+      let func = () => {
+        d3.select(".mouse-line")
+          .style("opacity", "1");
+        d3.selectAll(".mouse-per-line circle")
+          .style("opacity", "1");
+        d3.selectAll(".mouse-per-line text")
+          .style("opacity", "1");
+        d3.selectAll(".mouse-circle-img")
+          .style("opacity", "1");
+        if(isTouchDevice()) {  
+          d3.selectAll(".mobileHandle")
+            .style("opacity", "1");  
+        }
+        }
+        d3.timeout(func, 6000);
+        var handlePos = portrait ? innerWidth * 4 - 100 : innerWidth * 2 - 100;
+        updateTooltipsNumber(handlePos, height/2);
+      }
+      function updateTooltipsNumber(x, y) {
+      var mouse = [x, y];
         d3.select(".mouse-line")
           .attr("d", function() {
             var d = "M" + mouse[0] + "," + height;
             d += " " + mouse[0] + "," + 0;
             return d;
           });
+        if(isTouchDevice) { 
+          d3.selectAll(".mobileHandle")
+          .attr('transform', `translate(${mouse[0] - 20}, ${height - 40})`);
+        }
         d3.selectAll(".mouse-per-line")
           .attr("transform", function(d, i) {
             var xDate = xScale.invert(mouse[0]),
@@ -462,32 +546,73 @@ var formatting = d3.timeFormat("%B %d %Y");
           }
       }
 
-      // const lastEv = d3.select(".events:last-of-type").node();
-      // d3.timeout(() => {
-      //   lastEv.scrollIntoView({behavior: 'smooth'});
-      // }, 5000)
+
+    function updateTooltips() {
+      var mouse = d3.mouse(this);
+        d3.select(".mouse-line")
+          .attr("d", function() {
+            var d = "M" + mouse[0] + "," + height;
+            d += " " + mouse[0] + "," + 0;
+            return d;
+          });
+        if(isTouchDevice) { 
+            d3.selectAll(".mobileHandle")
+            .attr('transform', `translate(${mouse[0] - 20}, ${height - 40})`);
+          }
+        d3.selectAll(".mouse-per-line")
+          .attr("transform", function(d, i) {
+            var xDate = xScale.invert(mouse[0]),
+                bisect = d3.bisector(function(d) { return d.timestamp; }).left;
+                idx = bisect(d.values, xDate);            
+            var beginning = 0,
+                end = lines[i].getTotalLength(),
+                target = null;
+            while (true){
+              target = Math.floor((beginning + end) / 2);
+              pos = lines[i].getPointAtLength(target);
+              if ((target === end || target === beginning) && pos.x !== mouse[0]) {
+                  break;
+              }
+              if (pos.x > mouse[0])      end = target;
+              else if (pos.x < mouse[0]) beginning = target;
+              else break; //position found
+              }
+            d3.select(this).select('text')
+              .text(d.key + " :: " + yScale.invert(pos.y).toFixed(0))
+              .attr("font-size", "14px");
+            return "translate(" + mouse[0] + "," + pos.y +")";
+          });
+
+          var mouseX = mouse[0];
+          var enoughXspace = innerWidth - mouseX;
+          if (enoughXspace < 190) {
+          d3.selectAll('.textTT').attr("transform", "translate(-165,3)");
+          } else {
+          d3.selectAll('.textTT').attr("transform", "translate(25,3)");
+          }
+      }
 };
 
 ////////////////////////////////////
 //////  Rendering with Data  ///////
 ////////////////////////////////////
-d3.csv('../csv/events-all.csv')
-.then(datasetEv => {
-  datasetEv.forEach(de => {
-    de.duration = +de.duration;
-    de.name = de.name;
-    de.note = de.note;
-    de.link = de.link;
-    de.media = de.media;
-    de.num = +de.num;
-    de.mediaurl = de.mediaurl;
-    de.credit = de.credit;
-    de.crediturl = de.crediturl;
-    de.caption = de.caption;
-    de.date = new Date(de.date);
-  });
-  renderEv(datasetEv);
-});
+// d3.csv('../csv/events-all.csv')
+// .then(datasetEv => {
+//   datasetEv.forEach(de => {
+//     de.duration = +de.duration;
+//     de.name = de.name;
+//     de.note = de.note;
+//     de.link = de.link;
+//     de.media = de.media;
+//     de.num = +de.num;
+//     de.mediaurl = de.mediaurl;
+//     de.credit = de.credit;
+//     de.crediturl = de.crediturl;
+//     de.caption = de.caption;
+//     de.date = new Date(de.date);
+//   });
+//   renderEv(datasetEv);
+// });
 
 d3.csv('../csv/information-violence.csv')
 .then(dataset => {
@@ -497,6 +622,7 @@ d3.csv('../csv/information-violence.csv')
   });
   render(dataset);
 });
+
 
     ////////////////////////////////////
     ////////  Legend Animated  /////////
@@ -510,11 +636,11 @@ d3.csv('../csv/information-violence.csv')
     .transition()
       .style('opacity', 1)
       .duration(800)
-      .delay(200)
+      .delay(1000)
       .transition()
         .style('opacity', 0)
         .duration(800)
-        .delay(3000);
+        .delay(2800);
     var middleH = innerHeight/3*2;
     var gunLetter = d3.select('svg').append("g")
     .attr('transform', `translate( ${innerWidth<400 ? 70 : 100}, ${middleH})`)
@@ -525,8 +651,9 @@ d3.csv('../csv/information-violence.csv')
     .transition()
       .style('opacity', 1)
       .duration(800)
-      .delay(2200)
       .transition()
         .style('opacity', 0)
         .duration(800)
-        .delay(1000);
+        .delay(3000);
+
+});
