@@ -259,7 +259,7 @@ p {
   height: 100%; */
   /* background: linear-gradient(to bottom right, rgba(158, 74, 232, 0.533), rgba(255, 98, 0, 0.5)),
   url("../images/45-degree-fabric-light.png"); */
-  background: linear-gradient(rgba(51, 52, 139, 0.5), rgba(174, 117, 159, 0.5)),
+  background: linear-gradient(rgba(124, 99, 99, 0.5), rgba(76, 66, 73, 0.5)),
   url("../images/45-degree-fabric-light.png");
   color: #ddd;
 }
@@ -277,7 +277,7 @@ p {
 .events {
     mix-blend-mode: normal;
   /* mix-blend-mode:soft-light; */
-  fill: #FF7D00;
+  fill: #dd7328;
   -webkit-transition-duration: 100ms;
           transition-duration: 100ms;
 }

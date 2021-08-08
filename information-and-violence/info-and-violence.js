@@ -140,7 +140,7 @@ var formatting = d3.timeFormat("%B %d %Y");
             divEv.style("top", (d3.event.pageY - 28) + "px");	
         })			
         .on("mouseout", function(de) {
-          d3.select(this).style("mix-blend-mode","normal").style('opacity',0.8);
+          d3.select(this).style("mix-blend-mode","normal").style('opacity',0.5);
             divEv.transition()		
                 .duration(500)		
                 .style("opacity", 0);	
