@@ -4,17 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../css/infoviolence.css">
-    <script src="../js/d3.v5.js"></script>
-    <script src="../js/seamless.js"></script>
-    <title>1.82% | Info and Violence</title>
+    <script src="../js/p5.js"></script>
+    <title>1.82% | Violence in Ancient Societies</title>
     <link rel="icon"  type="image/png"  href="../favicon.ico" />
     <link rel="apple-touch-icon" sizes="1512x512" href="../logo512.png" />
     <link rel="icon" sizes="192x192" href="../logo192.png" />
 </head>
-<body>
+<body class="textured">
     <div class="header">
         <div class="headerLeft" onclick="rightPanelClose()"><a href="../">1.82%</a></div>
-        <div> :: info & violence :: </div>
+        <div> :: Violence in Ancient Societies :: </div>
         <div class="headerRight" onclick="rightPanelMove()">SOURCE</div>
     </div>
     <div class="rightPanel">
@@ -49,18 +48,8 @@
     </div>
     <div class="wrapper">
     </div>
-    <script src="../js/global.js"></script>
-    <script src="info-and-violence.js"></script>
-    <script>
-      var leftScroll =  innerHeight > innerWidth ? innerWidth * 3: innerWidth;
-      setTimeout(() => {
-        seamless.elementScroll(
-            document.querySelector(".wrapper"),
-            {   left: leftScroll,
-                behavior: 'smooth',
-            },
-        );
-      }, 5000);
-    </script>
+    <!-- <div class="texture-overlay"></div> -->
+
+    <script src="ancient-violence.js"></script>
 </body>
 </html>

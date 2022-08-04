@@ -13,6 +13,9 @@ body {
   /* background-image: linear-gradient(to bottom right, #7d53de, #F18805); */
   letter-spacing: 0.1em;
 }
+body.textured {
+  background-image: url("../images/45-degree-fabric-light.png");
+}
 
 a {
   text-decoration: none;
@@ -26,6 +29,7 @@ h1, h2, h3 {
 p {
   line-height: 1.5em;
 }
+
 
 /* ====== BREAK POINTS ====== */
 /* ====== GLOBAL ELEMENTS ====== */
@@ -164,6 +168,10 @@ p {
   overflow-y: hidden;
 }
 
+.wrapper.home {
+  overflow-y: scroll;
+}
+
 /* @media (orientation: portrait) {
   .wrapper {
     overflow-x: scroll;
@@ -188,23 +196,33 @@ p {
   height: -webkit-fit-content;
   height: -moz-fit-content;
   height: fit-content;
-  margin: 100px auto;
+  margin: 40px auto;
   text-align: center;
   color: #ddd;
 }
 
+.topMenu.footer {
+  margin: 80px auto 30px auto;
+}
+
 .topMenu h1 {
-  font-size: 1.2em;
-  margin: 150px 0 100px 0;
+  font-size: 1.6em;
+  font-weight: normal;
+  margin: 60px 0 40px 0;
+}
+
+.topMenu p a {
+  color: #ff5050;
 }
 
 .topMenu .menuBanner {
-  width: -webkit-fit-content;
-  width: -moz-fit-content;
-  width: fit-content;
+  width: calc(100% - 40px);
   display: block;
-  margin: 100px auto;
+  margin: 20px auto;
+  padding: 20px;
   position: relative;
+  border: #ddd solid 1px;
+  border-radius: 5px;
 }
 
 .topMenu .menuBanner:hover {
@@ -213,15 +231,19 @@ p {
           transition-duration: 300ms;
 }
 
+.topMenu .menuBanner.disabled {
+  opacity: 0.3;
+}
+
 .topMenu .menuBanner h2 {
   display: block;
   font-weight: normal;
-  font-size: 2em;
-  color: #ff5050;
+  font-size: 1.6em;
+  color: #ddd;
   translate: transform(-50%, 0);
 }
 
-.topMenu .menuBanner h2::after {
+/* .topMenu .menuBanner h2::after {
   content: "";
   width: 100%;
   height: 1px;
@@ -229,7 +251,7 @@ p {
   position: absolute;
   bottom: -5px;
   left: 0;
-}
+} */
 
 /* ====== Global Chart elements ====== */
 
@@ -766,3 +788,15 @@ div.openingModal p {
   margin-top: 5px;
 }
 /*# sourceMappingURL=global.css.map */
+
+
+/* Ancient Violence */
+/* .texture-overlay {
+  width: 100vw;
+  height: 100vh;
+  position: fixed;
+  top: 0; left: 0; bottom: 0; right: 0;
+  background-image: url("../images/45-degree-fabric-light.png");
+  z-index: 4500;
+  mix-blend-mode: overlay;
+} */
