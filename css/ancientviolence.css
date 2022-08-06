@@ -64,14 +64,14 @@ p {
 }
 
 .header .headerLeft:hover, .header .headerRight:hover {
-  color: #FF7D00;
+  color: rgb(177,10,30);
   -webkit-transition-duration: 300ms;
           transition-duration: 300ms;
 }
 
 @media (max-width: 800px) {
     .header .headerLeft, .header .headerRight {
-        color: #FF7D00;
+        color: rgb(177,10,30);
     }
 }
 
@@ -109,14 +109,14 @@ p {
   border-top: 1px rgba(221, 221, 221, 0.5) solid;
 }
 
-.rightPanel p#legHom, .rightPanel p#legGun, .rightPanel p#legEvent {
+.rightPanel p#legHom, .rightPanel p#legGun, .rightPanel p#legEvent, p#legBlo {
   /* text-indent: 40px; */
   padding-left: 55px;
   position: relative;
   cursor: pointer;
 }
 
-.rightPanel p#legHom::before, .rightPanel p#legGun::before, .rightPanel p#legEvent::before {
+.rightPanel p#legHom::before, .rightPanel p#legGun::before, .rightPanel p#legEvent::before, p#legBlo::before {
   content: "";
   width: 30px;
   height: 30px;
@@ -142,12 +142,17 @@ p {
   background-image: url("../images/45-degree-fabric-light.png");
 }
 
+.rightPanel p#legBlo::before {
+    background-color: rgba(177, 10, 30, 0.8);
+    background-image: url("../images/45-degree-fabric-light.png");
+  }
+
 .rightPanel p {
   letter-spacing: 0.05em;
 }
 
 .rightPanel p a {
-  color: #FF7D00;
+  color: rgb(177,10,30);
 }
 
 .rightPanel p a:hover {
@@ -225,7 +230,7 @@ p {
   display: block;
   font-weight: normal;
   font-size: 2em;
-  color: #FF7D00;
+  color: rgb(177,10,30);
   translate: transform(-50%, 0);
 }
 
@@ -233,7 +238,7 @@ p {
   content: "";
   width: 100%;
   height: 1px;
-  background: #FF7D00;
+  background: rgb(177,10,30);
   position: absolute;
   bottom: -5px;
   left: 0;
@@ -391,7 +396,7 @@ div.tooltipEv {
 .viewerEv div.viewerLeft .evLink {
     font-weight: bold;
     margin-bottom: 30px;
-    color: #FF7D00;
+    color: rgb(177,10,30);
 
 }
 .viewerEv div.viewerLeft .evLink:hover {
@@ -402,7 +407,7 @@ div.tooltipEv {
     font-size: 0.75em;
 }
 .viewerEv div.viewerRight .evCaption a {
-    color: #FF7D00;
+    color: rgb(177,10,30);
 }
 .viewerEv div.viewerRight .evCaption a:hover {
     opacity: 0.5;
@@ -538,3 +543,58 @@ g.gunLetter {
         font-size: 3em;
     }
 }
+
+#data-chart {
+    position: fixed;
+    width: 400px;
+    height: calc(100% - 200px);
+    max-width: calc(100% - 40px);
+    max-height: calc(100% - 40px);
+    overflow-y: auto;
+    background: #111;
+    top: 50%; left: 50%;
+    transform: translate(-50%, calc(-50% + 30px));
+    color: #ddd;
+    padding: 20px;
+    border: 0.5px #ddd solid;
+    letter-spacing: normal;
+    text-align: right;
+  }
+  #data-chart .grid {
+    display: grid;
+    gap: 0;
+    grid-template-columns: auto auto auto auto;
+  }
+
+  #data-chart .grid div{
+    grid-row: inherit;
+    grid-column: inherit;
+    border-bottom: #444 1px solid;
+    padding: 5px 0 5px 10px;
+  }
+
+  #data-chart .grid div.title {
+    color: rgb(177,10,30);
+  }
+
+  #dataIcon {
+    width: 40px;
+    height: 40px;
+    position: fixed;
+    bottom: 10px;
+    left: 10px;
+    background-color: #111;
+    border: #ddd 0.5px solid;
+  }
+  #screen {
+    position: fixed;
+    background: rgba(0, 0, 0, 0.4);
+    width: 100%;
+    height: 100%;
+    top: 0; bottom: 0; left: 0; right: 0;
+    margin: 0; padding: 0;
+  }
+
+  .hidden {
+    display: none;
+  }

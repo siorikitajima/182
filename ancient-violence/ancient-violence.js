@@ -4,304 +4,29 @@ let img, map, font, cols, rows, mapX, mapY;
 // let id = 1;
 let yr = 15000;
 let sr = 'BCE';
-
-const ancViol = [
-  {
-    "year": "14000 - 6000 BCE",
-    "name": "Gobero\n(Niger)",
-    "share": 0,
-    "yr": 14000,
-    "sr": "BCE",
-    "mapX": 95,
-    "mapY": 50
-  },
-  {
-    "year": "12000 - 10000 BCE",
-    "name": "Nubia(Egypt):\nsite 117",
-    "share": 46,
-    "yr": 12000,
-    "sr": "BCE",
-    "mapX": 115,
-    "mapY": 40
-  },
-  {
-    "year": "12000 - 10000 BCE",
-    "name": "Nubia(Egypt):\nnear site 117",
-    "share": 3,
-    "yr": 12000,
-    "sr": "BCE",
-    "mapX": 115,
-    "mapY": 40
-  },
-  {
-    "year": "10000 BCE",
-    "name": "Nubia(Egypt):\nQadan burials",
-    "share": 21,
-    "yr": 10000,
-    "sr": "BCE",
-    "mapX": 115,
-    "mapY": 40
-  },
-  {
-    "year": "9000 BCE",
-    "name": "Vasiliv'ka III\n(Ukraine)",
-    "share": 21,
-    "yr": 9000,
-    "sr": "BCE",
-    "mapX": 110,
-    "mapY": 30
-  },
-  {
-    "year": "7500 BCE",
-    "name": "Volos'ke\n(Ukraine)",
-    "share": 22,
-    "yr": 7500,
-    "sr": "BCE",
-    "mapX": 110,
-    "mapY": 30
-  },
-  {
-    "year": "6300 - 5300 BCE",
-    "name": "Calumnata\n(Algeria)",
-    "share": 4,
-    "yr": 6300,
-    "sr": "BCE",
-    "mapX": 88,
-    "mapY": 40
-  },
-  {
-    "year": "6000 BCE",
-    "name": "Brittany\n(France)",
-    "share": 8,
-    "yr": 6000,
-    "sr": "BCE",
-    "mapX": 85,
-    "mapY": 30
-  },
-  {
-    "year": "6000 BCE",
-    "name": "Columnata\n(Algeria)",
-    "share": 2,
-    "yr": 6000,
-    "sr": "BCE",
-    "mapX": 88,
-    "mapY": 40
-  },
-  {
-    "year": "4600 BCE",
-    "name": "Ile Teviec\n(France)",
-    "share": 12,
-    "yr": 4600,
-    "sr": "BCE",
-    "mapX": 85,
-    "mapY": 30
-  },
-  {
-    "year": "4300 - 3800 BCE",
-    "name": "Bogebakken\n(Denmark)",
-    "share": 12,
-    "yr": 4300,
-    "sr": "BCE",
-    "mapX": 90,
-    "mapY": 25
-  },
-  {
-    "year": "4100 BCE",
-    "name": "Skateholm 1\n(Sweden)",
-    "share": 7,
-    "yr": 4100,
-    "sr": "BCE",
-    "mapX": 95,
-    "mapY": 20
-  },
-  {
-    "year": "4100 BCE",
-    "name": "Vedbaek\n(Denmark)",
-    "share": 17,
-    "yr": 4100,
-    "sr": "BCE",
-    "mapX": 90,
-    "mapY": 25
-  },
-  {
-    "year": "3500 BCE - 1380 CE",
-    "name": "S. California:\n28 sites",
-    "share": 6,
-    "yr": 3500,
-    "sr": "BCE",
-    "mapX": 25,
-    "mapY": 45
-  },
-  {
-    "year": "3500 BCE - 1674 CE",
-    "name": "British Columbia:\n30 sites",
-    "share": 23,
-    "yr": 3500,
-    "sr": "BCE",
-    "mapX": 25,
-    "mapY": 35
-  },
-  {
-    "year": "2500 - 3000 BCE",
-    "name": "Kentucky",
-    "share": 6,
-    "yr": 2500,
-    "sr": "BCE",
-    "mapX": 40,
-    "mapY": 35
-  },
-  {
-    "year": "2240 BCE - 1770 CE",
-    "name": "Central California\n(2 sites)",
-    "share": 4,
-    "yr": 2200,
-    "sr": "BCE",
-    "mapX": 25,
-    "mapY": 45
-  },
-  {
-    "year": "1500 BCE - 500 CE",
-    "name": "N. British Columbia",
-    "share": 32,
-    "yr": 1500,
-    "sr": "BCE",
-    "mapX": 25,
-    "mapY": 35
-  },
-  {
-    "year": "1500 BCE - 500 CE",
-    "name": "Central California",
-    "share": 5,
-    "yr": 1500,
-    "sr": "BCE",
-    "mapX": 25,
-    "mapY": 45
-  },
-  {
-    "year": "1140 - 854 BCE",
-    "name": "Sarai Nahar Rai\n(N. India)",
-    "share": 30,
-    "yr": 1150,
-    "sr": "BCE",
-    "mapX": 135,
-    "mapY": 45
-  },
-  {
-    "year": "415 BCE - 227 CE",
-    "name": "Central California",
-    "share": 8,
-    "yr": 400,
-    "sr": "BCE",
-    "mapX": 25,
-    "mapY": 45
-  },
-  {
-    "year": "100 - 1100 CE",
-    "name": "CA-Ven-110\n(S. California)",
-    "share": 10,
-    "yr": 100,
-    "sr": "CE",
-    "mapX": 25,
-    "mapY": 45
-  },
-  {
-    "year": "500 - 1774 CE",
-    "name": "British Columbia",
-    "share": 28,
-    "yr": 500,
-    "sr": "CE",
-    "mapX": 25,
-    "mapY": 35
-  },
-  {
-    "year": "1300 CE",
-    "name": "Illinois",
-    "share": 16,
-    "yr": 1300,
-    "sr": "CE",
-    "mapX": 40,
-    "mapY": 33
-  },
-  {
-    "year": "1325 CE",
-    "name": "Crow Creek\n(South Dakota)",
-    "share": 60,
-    "yr": 1320,
-    "sr": "CE",
-    "mapX": 35,
-    "mapY": 33
-  },
-  {
-    "year": "1325 - 1650 CE",
-    "name": "Northeast Plains\n(Plain Indians)",
-    "share": 15,
-    "yr": 1320,
-    "sr": "CE",
-    "mapX": 35,
-    "mapY": 30
-  },
-  {
-    "year": "1805 CE",
-    "name": "Blackfoot tribe\n(Plain Indians)",
-    "share": 50,
-    "yr": 1800,
-    "sr": "CE",
-    "mapX": 35,
-    "mapY": 35
-  },
-  {
-    "year": "1857 CE",
-    "name": "Blackfoot tribe\n(Plain Indians)",
-    "share": 33,
-    "yr": 1850,
-    "sr": "CE",
-    "mapX": 35,
-    "mapY": 35
-  },
-  {
-    "year": "1900 CE",
-    "name": "Tribal Montenegro",
-    "share": 25,
-    "yr": 1900,
-    "sr": "CE",
-    "mapX": 100,
-    "mapY": 35
-  },
-  {
-    "year": "1920 - 1979 CE",
-    "name": "Ayoreo\n(Hunter-Gatherer)",
-    "share": 20,
-    "yr": 1920,
-    "sr": "CE",
-    "mapX": 55,
-    "mapY": 65
-  },
-  {
-    "year": "1962 - 1977 CE",
-    "name": "Casiguran Agta\n(Philippines)\n(Hunter-Gatherer)",
-    "share": 12,
-    "yr": 1960,
-    "sr": "CE",
-    "mapX": 160,
-    "mapY": 55
-  }
-
-];
+let yx = 10;
+let ctlIcon, pause, resume;
+let playing = true;
 
 function preload() {
   img = loadImage('../images/45-degree-fabric-light.png');
   map = loadImage('../images/world-map.svg');
   font = loadFont('../css/dosis.light.otf');
+  pause = loadImage('../images/Pause_btn.svg');
+  resume = loadImage('../images/Play_btn.svg');
 }
 
 function setup() {
     textFont(font);
+    textSize(18);
     createCanvas(windowWidth, windowHeight - 40);
 
     cols = windowWidth/img.width;
     rows = windowHeight/img.height;
     if( windowWidth%img.width> 0){cols++;}
     if( windowHeight%img.height > 0){rows++;}
+
+    ctlIcon = pause;
   }
   
   function draw() {
@@ -309,65 +34,130 @@ function setup() {
     
     for(let i = 0;i<bloods.length;i++) {
         bloods[i].show();
-        bloods[i].fade();
+        if (playing) {
+          if(sr == 'CE' && yr > 1980) {
+            bloods[i].fade(100);
+          } else {
+            bloods[i].fade(1);
+          }
+        }
         bloods[i].remove(bloods);
       }
-    for (let y=0; y<rows; y++){
-      for (let x=0; x<cols; x++){
-          tint(50,50,50);
-          image(img,x*img.width,y*img.height);
-      }
-    }
 
+    // BG texture 
+    // tint(50,50,50);
+    // for (let y=0; y<rows; y++){
+    //   for (let x=0; x<cols; x++){
+    //       image(img,x*img.width,y*img.height);
+    //   }
+    // }
+
+    textSize(18);
     fill(11,11,11);
     stroke(150,150,150);
-    rect(10, 10, 100, 40);
-    rect(windowWidth - 210, 10, 200, 100);
-    image(map, windowWidth - 210, 10, 200, 100);
+
+    // The Year + Controller + Map Frame
+    rect(10, 50, 100, 40);
+    rect(110, 50, 40, 40);
+    rect(windowWidth - 210, 50, 200, 100);
+    noTint();
+    image (ctlIcon, 110, 50, 40, 40);
+    
+
+    // The timeline
+    rect(10, 10, windowWidth - 20, 40);
+    line(10, 30, windowWidth - 10, 30);
+    
+    // The map
+    tint(50,50,50);
+    image(map, windowWidth - 210, 50, 200, 100);
     noFill();
-    rect(windowWidth - 210, 10, 200, 100);
+    rect(windowWidth - 210, 50, 200, 100);
+
+    // The year
     textAlign(CENTER, CENTER);
     fill(150,150,150);
-    text(yr + ' ' + sr, 60, 28);
+    text(yr + ' ' + sr, 60, 68);
     fill(177, 10, 30);
     noStroke();
-    ellipse(windowWidth - 210 + mapX, 10 + mapY, 10);
+    ellipse(windowWidth - 210 + mapX, 50 + mapY, 10);
+  
+    // The timeline handle
+    rect( yx, 10, 2, 40);
 
-    if (sr == 'BCE' && yr == 0) {
-      sr = 'CE';
-      yr = yr +10;
-    } else if (sr == 'CE' && yr == 2000) {
-      sr = 'BCE';
-      yr = 14000;
-      yr = yr -50;
-    } else if (sr == 'BCE' && yr < 7000) {
-      yr = yr -10;
-    } else if (sr == 'BCE') {
-      yr = yr -50;
-    } else if (sr == 'CE' && yr > 1300) {
-      yr = yr +5;
-    } else if (sr == 'CE') {
-      yr = yr +10;
+    // The mini bloods on the timeline
+    fill(177, 10, 30, 150);
+    // console.log();
+    for(let d = 0; d < ancViol.length; d++) {
+      let dotsize = 40 / 100 * ancViol[d].share;
+      let dotx;
+      if (ancViol[d].sr == 'BCE') {
+        dotx = windowWidth - 10 - ((windowWidth-20) / (15000 + 2000) * (ancViol[d].yr + 2000));
+      } else if (ancViol[d].sr == 'CE') {
+        dotx = (windowWidth-20) / (15000 + 2000) * (15000 + ancViol[d].yr) + 10;
+      }
+      ellipse(dotx, 30, dotsize + 4);
+    }
+
+    if (playing) {
+      if (sr == 'BCE' && yr == 0) {
+        sr = 'CE';
+        yr = yr +10;
+      } else if (sr == 'CE' && yr == 2000) {
+        sr = 'BCE';
+        yr = 15000;
+        yr = yr -50;
+      } else if (sr == 'BCE' && yr < 6500 && yr > 5900 || sr == 'BCE' && yr < 4700 ) {
+        yr = yr -10;
+      } else if (sr == 'BCE') {
+        yr = yr -50;
+      } else if (sr == 'CE' && yr > 1300) {
+        yr = yr +5;
+      } else if (sr == 'CE') {
+        yr = yr +10;
+      }
     }
 
     for (let b = 0; b < ancViol.length; b++) {
       if (ancViol[b].yr == yr && ancViol[b].sr == sr) {
-        bloods.push(new Blood(ancViol[b].name, ancViol[b].share, ancViol[b].year));
+        bloods.push(new Blood(ancViol[b].sname, ancViol[b].share, ancViol[b].syear));
         mapX = ancViol[b].mapX;
         mapY = ancViol[b].mapY;
         break;
       }
     }
+
+    if (sr == 'BCE') {
+      yx = windowWidth - 10 - ((windowWidth-20) / (15000 + 2000) * (yr + 2000));
+    } else if (sr == 'CE') {
+      yx = (windowWidth-20) / (15000 + 2000) * (15000 + yr) + 10;
+    }
   }
 
-  // setInterval(() => {
-  //   bloods.push(new Blood(ancViol[id].name, ancViol[id].share, ancViol[id].year));
-  //   if (id == ancViol.length -1) {
-  //     id = 0;
-  //   } else {
-  //     id = id +1;
-  //   }
-  // }, 2000);
+  function mousePressed() {
+    let grid = (windowWidth - 20) / (15000 + 2000);
+    if(mouseY > 10 && mouseY < 50 && mouseX > 10 && mouseX < windowWidth-10) {
+      let posX = floor(mouseX / grid);
+      let gridX = Math.round(posX / 100) * 100;
+      if (gridX > 15000) { 
+        gridX = gridX - 15000;
+        sr = 'CE'; yr = gridX;
+      } else {
+        gridX = (gridX - 15000) * (-1);
+        sr = 'BCE'; yr = gridX;
+      }
+    }
+
+    if(mouseY > 50 && mouseY < 90 && mouseX > 110 && mouseX < 150) {
+      if(playing) {
+        playing = false;
+        ctlIcon = resume;
+      } else {
+        playing = true;
+        ctlIcon = pause;
+      }
+    }
+  }
 
   class Blood {
     constructor(name, rate, year) {
@@ -375,8 +165,8 @@ function setup() {
         this.rate = rate;
         this.year = year;
         this.size = random(0.9, 1.1) * ( rate / 100 ) * windowHeight;
-        this.x = random(this.size/2 + 40, windowWidth - this.size/2);
-        this.y = random(this.size/2 + 40, windowHeight - this.size/2);
+        this.x = random(this.size/2 + 40, windowWidth - 40 - this.size/2);
+        this.y = random(this.size/2 + 60, windowHeight - 60 - this.size/2);
         this.third = floor(this.size * 0.3);
         this.num = floor(this.size * 0.1);
         this.area = floor(this.size * 0.75);
@@ -386,11 +176,9 @@ function setup() {
             this.smx.push(this.x + random(-(this.area), this.area));
             this.smy.push(this.y + random(-(this.area), this.area));
         }
-        // this.lgsize = random(this.third/1.5, this.third*2); 
         this.lgx = random(-this.size*0.8, this.size*0.8); 
         this.lgy = random(-this.size*0.8, this.size*0.8); 
         this.thick = random(10, 30);
-        // this.lgangle = random(0, 360);
         this.r = 177;
         this.g = 10;
         this.b = 30;
@@ -399,22 +187,12 @@ function setup() {
         this.white = 230;
     }
     show() {
-        // blendMode(OVERLAY)
         fill(this.r, this.g, this.b, this.o);
         noStroke();
         ellipse(this.x, this.y, this.size);
         for(let s = 0; s < this.num; s++) {
             ellipse(this.smx[s], this.smy[s], this.smsize[s]);
         }
-        // translate(this.x + this.lgsize - 10, this.y);
-        // angleMode(DEGREES);
-        // rotate(this.lgangle);
-        // rect(this.x, this.y, this.lgsize, this.thick, this.thick/2);
-
-        // strokeWeight(this.thick);
-        // stroke(this.r, this.g, this.b);
-        // line(this.x, this.y, this.x + this.lgx, this.y + this.lgy);
-        // ellipse(this.x + this.lgx, this.y + this.lgy, this.sec);
 
         beginShape();
         curveVertex(this.x, this.y);
@@ -428,15 +206,17 @@ function setup() {
         textSize(18);
         textAlign(CENTER, CENTER);
         fill(this.white,this.white,this.white);
-        text(this.year + '\n' + this.name + '\n' + this.rate + '%', this.x, this.y);
+        text(this.year + '\n' + this.name, this.x, this.y -20);
+        textSize(24);
+        text(this.rate + '%', this.x, this.y + 18);
     }
-    fade() {
+    fade(acc) {
         if (this.r > 100 * 0.1) {
-            this.r = this.r - 0.5;
-            this.g = this.g - 0.5;
-            this.b = this.b - 0.5;
-            this.o = this.o - 0.5;
-            this.white = this.white - 0.5;
+            this.r = this.r - (0.2 * acc);
+            this.g = this.g - (0.2 * acc);
+            this.b = this.b - (0.2 * acc);
+            this.o = this.o - (0.2 * acc);
+            this.white = this.white - (0.2 * acc);
         }
     }
     remove(array) {

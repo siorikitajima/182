@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../css/infoviolence.css">
+    <link rel="stylesheet" href="../css/ancientviolence.css">
     <script src="../js/p5.js"></script>
+    <script src="../js/d3.v5.js"></script>
     <title>1.82% | Violence in Ancient Societies</title>
     <link rel="icon"  type="image/png"  href="../favicon.ico" />
     <link rel="apple-touch-icon" sizes="1512x512" href="../logo512.png" />
@@ -18,38 +19,89 @@
     </div>
     <div class="rightPanel">
         <div>
-            <p><b>Information and Violence</b> is an interactive data visualization showing a timeline of major U.S. news headlines along with gun sales and homicides from 2016. Since 2016, the numbers of gun sales and homicides has been steadily increasing. What is the cause? Could it be influenced by the media that we consume? By seeing violent information, does it make us more violent? Does violent information increase gun sales leading to more violence?</p>
+            <p><b>Violence in Ancient Societies</b> is a generative data visualization showing the different levels of violence in different societies in prehistoric times (and some recent incidents). When the world used to be disconnected from each other, the levels of violence in each society varies widely depending on the characteristics and the culture. While no one was murdered in one society (14000 BCE in Gobero near Niger), almost half of the population were killed in another (12000 BCE Nubia near Egypt). What made such difference?<br/>These numbers are the combination of 'Share of violent deaths for archeological sites' and some of 'Share of violent deaths for non-state societies' from <a href='https://ourworldindata.org/ethnographic-and-archaeological-evidence-on-violent-deaths#' target='_blank'>'Ethnographic and archaeological evidence on violent deaths' by Max Roser</a>. If you have matching data that can be added to this data, <a href='https://patternbased.com/contact/' target='_blank'>please contact me</a>. </p>
 
             <h3>:: Legend ::</h3>
-            <p id="legHom">Monthly Homicide counts in U.S.</p>
-            <p id="legGun">Estimated monthly gun sales in U.S.</p>
-            <p id="legEvent">Significant news events related to violence, politics and guns. Click or tap to see more about the event.</p>
-            <p>The screen is scrollable horizontally. The timeline captured in this version is from January 2016 to January 2021.</p>
-            <p>For both Homicides and Gun Sales, the bottom of the screen is 0, and the higher the graph, the higher the number is. </p>
+            <p id="legBlo">The size of each blood drop indicates the corresponding murder rate/share of violent deaths.</p>
+            
+            <p>The horizontal bar on the top of the screen shows where each data point is in the timeline, and the year the red handle is on is displayed underneath the timeline bar on the left. You can play the timeline from a certain point by clicking on this timeline bar. You can pause the timeline by clicking the pause button.</p>
+            <p>The map on the right top of the screen shows the location of the data associated with the blood drop.</p>
 
             <h3>:: Data Sources ::</h3>
-            <p><b>HOMICIDES</b> = From 2016 to 2019, the data is from <a href='https://wonder.cdc.gov/' target='_blank'>CDC WONDER Data Archive</a>. From 2020, since the data publishing by CDC has been paused since the COVID pandemic, we used the estimated monthly homicide numbers from <a href='https://cdn.ymaws.com/counciloncj.org/resource/resmgr/covid_commission/Year_End_Crime_Update_Design.pdf' target='_blank'>the report published by CCJ National Commission on COVID-19 and Criminal Justice</a>.</p>
-            <p><b>GUN SALES</b> = <a href='https://brady-static.s3.amazonaws.com/NICSdata-year.pdf' target='_blank'>Brady's estimated monthly gun sales</a>, which is caluculated based on <a href='https://www.fbi.gov/services/cjis/nics' target='_blank'>NICS</a>'s background check for firearm sales.</p>
-            <p><b>NEWS EVENTS</b> = Significant news events picked from Wikipedia's list of incidences in U.S. <a href='https://en.wikipedia.org/wiki/2016_in_the_United_States' target='_blank'>2016 in the United States</a>, <a href='https://en.wikipedia.org/wiki/2017_in_the_United_States' target='_blank'>2017 in the United States</a>, <a href='https://en.wikipedia.org/wiki/2018_in_the_United_States' target='_blank'>2018 in the United States</a>, <a href='https://en.wikipedia.org/wiki/2019_in_the_United_States' target='_blank'>2019 in the United States</a>, <a href='https://en.wikipedia.org/wiki/2020_in_the_United_States' target='_blank'>2020 in the United States</a>, <a href='https://en.wikipedia.org/wiki/2021_in_the_United_States' target='_blank'>2021 in the United States</a>.</p>
+            <p><a href='https://ourworldindata.org/ethnographic-and-archaeological-evidence-on-violent-deaths#' target='_blank'>Ethnographic and archaeological evidence on violent deaths, by Max Roser</a>, Our World in Data.</p>
 
             <h3>:: Credits ::</h3>
-            <p>Research, Art and Code by <a href='https://www.siorikitajima.com' target='_blank'>Siori Kitajima</a><br/>
-            Created in an online artist residency program 2020 - 2021 by <a href='https://www.perfec-art.com/' target='_blank'>Buckwheat Space</a></p>
+            <p>Research, Art and Code by <a href='https://www.siorikitajima.com' target='_blank'>Siori Kitajima</a>
+            </p>
 
-            <p>Made with amazing tools: <a href='https://d3js.org/' target='_blank'>D3.js</a> and more</p>
-            <p>Thank you <a href='https://www.yvonnebuchanan-art.com/' target='_blank'>Yvonne Buchanan</a>, <a href='https://dorenequinn-artist.com/' target='_blank'>Dorene Quinn</a>, Corrabelle and Orlando.
+            <p>Made with amazing tools: <a href='https://p5js.org//' target='_blank'>P5.js</a></p>
+            <p>Thank you <a href='https://josephminadeo.com/' target='_blank'>Joey</a>, Corrabelle and Orlando.
             </p>
             
             <p>Powered by <a href='https://www.patternbased.com/' target='_blank'>PatternBased</a><br/>
             Released under <a href='https://opensource.org/licenses/MIT' target='_blank'>MIT License</a><br/>
-            Copyright © 2021-2022 Siori Kitajima and PatternBased</p>
+            Copyright © 2022 Siori Kitajima and PatternBased</p>
             <p></p>
         </div>
     </div>
     <div class="wrapper">
     </div>
     <!-- <div class="texture-overlay"></div> -->
-
+    <script src="../csv/ancient-violence.js"></script>
+    <script src="../js/global.js"></script>
     <script src="ancient-violence.js"></script>
+    <div id="screen" class="hidden"></div>
+    <div id="data-chart" class="hidden">
+        <!-- <img src="../images/close-icon.svg" width="30" alt="close the data table"> -->
+        <!-- <div class="grid">
+            <div class="title"></div>
+            <div class="title">Year</div>
+            <div class="title">Locarion</div>
+            <div class="title">Share</div>
+            <div>Namename</div>
+            <div>2000 BCE</div>
+            <div>Denmark</div>
+            <div>20 %</div>
+        </div> -->
+    </div>
+    <div id="dataIcon">
+        <img src="../images/Data_btn.svg" alt="See Data">
+    </div>
+
+    <script>
+        const titles = '<div class="grid"><div class="title">SOCIETY/SITE</div><div class="title">YEAR</div><div class="title">LOCATION</div><div class="title">SHARE</div>';     
+        let html;
+        html = titles;
+        for(let s =0; s< ancViol.length; s++) {
+            row = `<div>${ ancViol[s].name }</div>
+            <div>${ ancViol[s].year }</div>
+            <div>${ ancViol[s].location }</div>
+            <div>${ ancViol[s].share } %</div>`
+            html = html + row;
+        }   
+        html = html + '</div>';
+        // console.log(html);
+        // document.querySelector('#data-chart').innerHTML = html;
+
+        let chart = document.querySelector('#data-chart');
+        let scrn = document.querySelector('#screen');
+        let dataIcon = document.querySelector('#dataIcon');
+        chart.innerHTML = html;
+
+        document.querySelector('#screen').addEventListener('click', ()=> {
+            chart.classList.add('hidden');
+            scrn.classList.add('hidden');
+        })
+
+        document.querySelector('#dataIcon').addEventListener('click', ()=> {
+            if (chart.classList.contains('hidden')) {
+                chart.classList.remove('hidden');
+                scrn.classList.remove('hidden');
+            } else {
+                chart.classList.add('hidden');
+                scrn.classList.add('hidden');
+            }
+        })
+    </script>
 </body>
 </html>
