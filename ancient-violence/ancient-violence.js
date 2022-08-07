@@ -146,6 +146,7 @@ function setup() {
         gridX = (gridX - 15000) * (-1);
         sr = 'BCE'; yr = gridX;
       }
+      return false
     }
 
     if(mouseY > 50 && mouseY < 90 && mouseX > 110 && mouseX < 150) {
@@ -156,6 +157,7 @@ function setup() {
         playing = true;
         ctlIcon = pause;
       }
+      return false
     }
   }
 
@@ -188,7 +190,7 @@ function setup() {
     }
     show() {
         fill(this.r, this.g, this.b, this.o);
-        noStroke();
+        stroke(this.r - 5, this.g - 5, this.b - 5, this.o);
         ellipse(this.x, this.y, this.size);
         for(let s = 0; s < this.num; s++) {
             ellipse(this.smx[s], this.smy[s], this.smsize[s]);
@@ -203,6 +205,7 @@ function setup() {
         endShape();        
         ellipse(this.x + this.lgx, this.y + this.lgy, this.sec);
 
+        noStroke();
         textSize(18);
         textAlign(CENTER, CENTER);
         fill(this.white,this.white,this.white);
